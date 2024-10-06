@@ -13,12 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setFixedSize(1800, 1000); // Установите фиксированный размер окна
 
-    // QWidget *centralWidget = new QWidget(this);
+// QWidget *centralWidget = new QWidget(this);
 
     // QVBoxLayout *layout = new QVBoxLayout(centralWidget);
 
 
-   //  // Устанавливаем политику размеров
+ //  // Устанавливаем политику размеров
    //  QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
    //  ui->menuwidget->setSizePolicy(sizePolicy);
    // ui->pushButton->setFixedSize(100,100);
