@@ -36,10 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
     QPixmap menuactive(":/img/menuactive.png");
     ui->menulabel->setPixmap(pixmap);
     ui->menulabel->setScaledContents(true);
-
-
-
-
 }
 
 MainWindow::~MainWindow()
