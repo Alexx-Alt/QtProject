@@ -14,6 +14,7 @@ class login : public QWidget
 public:
     explicit login(QWidget *parent = nullptr);
     ~login();
+    QString getUsername() const; // Новый метод для получения имени пользователя
 private slots:
     void on_loginButton_clicked();
 
@@ -28,6 +29,7 @@ private:
     Ui::login *ui;
     QString hashPassword(const QString &password);
     void openMainWindow();
+    QString usernameCons; // Переменная для хранения имени пользователя
 
 };
 

@@ -25,27 +25,17 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="menuwidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>71</width>
-      <height>1001</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 215, 216);</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>176</x>
-      <y>230</y>
-      <width>40</width>
-      <height>31</height>
+      <x>30</x>
+      <y>190</y>
+      <width>41</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -73,14 +63,14 @@ QPushButton:pressed {
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>70</x>
+      <x>100</x>
       <y>0</y>
-      <width>1731</width>
-      <height>80</height>
+      <width>16</width>
+      <height>1011</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 211, 247);</string>
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
     </property>
    </widget>
    <widget class="QLabel" name="menulabel">
@@ -89,20 +79,263 @@ QPushButton:pressed {
     </property>
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>230</y>
-      <width>31</width>
-      <height>31</height>
+      <x>30</x>
+      <y>190</y>
+      <width>41</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QWidget" name="widget_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>70</y>
+      <width>1731</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="booklabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>260</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>260</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: transparent;    /* Сделать фон кнопки прозрачным */
+    border: none;                     /* Убрать рамку, если не нужна */
+    color: white;                     /* Цвет текста */
+    font-size: 16px;                  /* Размер шрифта */
+    padding: 10px;                    /* Отступы внутри кнопки */
+}
+
+QPushButton:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Цвет фона при наведении (полупрозрачный) */
+}
+
+QPushButton:pressed {
+    background-color: rgba(255, 255, 255, 0.4); /* Цвет фона при нажатии (более темный полупрозрачный) */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>90</y>
+      <width>1681</width>
+      <height>911</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QWidget" name="widget_3" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>60</y>
+       <width>931</width>
+       <height>541</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget{
+    background: transparent;          /* Прозрачный фон */
+    border: 1px solid gray;           /* Рамка серого цвета */
+    border-radius: 10px;              /* Закругление углов */
+}</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="widget_5" native="true">
+     <property name="geometry">
+      <rect>
+       <x>980</x>
+       <y>60</y>
+       <width>671</width>
+       <height>541</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget{
+    background: transparent;          /* Прозрачный фон */
+    border: 1px solid gray;           /* Рамка серого цвета */
+    border-radius: 10px;              /* Закругление углов */
+}</string>
+     </property>
+     <widget class="QLabel" name="completedCoursesLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="completedLessonsLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="experienceLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>90</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget_4" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>620</y>
+       <width>931</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget{
+    background: transparent;          /* Прозрачный фон */
+    border: 1px solid gray;           /* Рамка серого цвета */
+    border-radius: 10px;              /* Закругление углов */
+}</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="widget_6" native="true">
+     <property name="geometry">
+      <rect>
+       <x>980</x>
+       <y>620</y>
+       <width>321</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget{
+    background: transparent;          /* Прозрачный фон */
+    border: 1px solid gray;           /* Рамка серого цвета */
+    border-radius: 10px;              /* Закругление углов */
+}</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="widget_7" native="true">
+     <property name="geometry">
+      <rect>
+       <x>1320</x>
+       <y>620</y>
+       <width>331</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget{
+    background: transparent;          /* Прозрачный фон */
+    border: 1px solid gray;           /* Рамка серого цвета */
+    border-radius: 10px;              /* Закругление углов */
+}</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="welcomeLabel">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>20</y>
+       <width>851</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="upmenuHome">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>20</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font:  14pt &quot;Segoe UI&quot;;
+</string>
+    </property>
+    <property name="text">
+     <string>Главная</string>
+    </property>
+   </widget>
+   <zorder>frame</zorder>
+   <zorder>pushButton_2</zorder>
    <zorder>menulabel</zorder>
-   <zorder>menuwidget</zorder>
    <zorder>pushButton</zorder>
    <zorder>widget</zorder>
+   <zorder>widget_2</zorder>
+   <zorder>booklabel</zorder>
+   <zorder>upmenuHome</zorder>
   </widget>
  </widget>
  <resources/>

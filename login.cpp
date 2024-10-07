@@ -73,10 +73,11 @@ void login::on_LoginButton_clicked()
 {
     QString username = ui->NameLabel2->text();
     QString password = ui->PasswordLabel2->text();
+     usernameCons = username; // Сохраняем имя пользователя
 
     // Создание запроса для проверки пользователя
     QSqlQuery query;
-    query.prepare("SELECT PasswordS FROM student WHERE username = ?");
+    query.prepare("SELECT password_hash FROM users WHERE username = ?");
     query.addBindValue(username);
 
     if (!query.exec()) {
@@ -88,9 +89,10 @@ void login::on_LoginButton_clicked()
         QString storedHash = query.value(0).toString(); // Получаем хранимый хэш пароля
         if (storedHash == hashPassword(password)) { // Сравниваем с введенным паролем
             QMessageBox::information(this, "Успех", "Вы успешно вошли в систему!");
-            // Здесь можно закрыть окно входа и открыть главное окно приложения
+            MainWindow *mainWindow = new MainWindow(usernameCons);
+
+            mainWindow->show(); // Открываем главное окно
             this->close(); // Закрываем окно входа
-            openMainWindow(); // Открываем главное окно
         } else {
             QMessageBox::warning(this, "Ошибка", "Неверный пароль.");
         }
@@ -99,8 +101,8 @@ void login::on_LoginButton_clicked()
     }
 
 }
-void login::openMainWindow() {
-    MainWindow *mainWindow = new MainWindow();
-    mainWindow->show(); // Показываем главное окно
-}
+// void login::openMainWindow() {
+//     MainWindow *mainWindow = new MainWindow();
+//     mainWindow->show(); // Показываем главное окно
+// }
 

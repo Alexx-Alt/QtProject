@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(const QString &username, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -22,5 +22,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QString currentUserName; // Переменная для хранения имени пользователя
+    void fetchCompletedCoursesAndLessons(int userId);
+    int getUserIdByUsername(const QString &username); //получения id по username
+    void fetchUserLevelAndExperience(int userId); //получения уровня
+
 };
 #endif // MAINWINDOW_H

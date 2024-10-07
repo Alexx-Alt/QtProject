@@ -1,4 +1,3 @@
-#include "mainwindow.h"
 #include "login.h"
 #include "database.h"
 
@@ -13,10 +12,10 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    MainWindow w;
+    // MainWindow w;
     login l;
     // Создание объекта Database и подключение к базе данных
-    Database db("127.0.0.1", 3306, "lernv1", "root", "Pocket_2564");
+    Database db("127.0.0.1", 3306, "learningv1", "root", "Pocket_2564");
 
     if (!db.open()) {
         return -1; // Завершаем программу в случае ошибки подключения
@@ -24,7 +23,7 @@ int main(int argc, char *argv[])
 
 
 
-    w.show();
+    l.show();
     return a.exec();
 
 

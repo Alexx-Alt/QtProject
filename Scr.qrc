@@ -3,5 +3,7 @@
         <file>src/menu.png</file>
         <file>menu.png</file>
         <file>menuactive.png</file>
+        <file>house.png</file>
+        <file>book.png</file>
     </qresource>
 </RCC>
