@@ -38,6 +38,7 @@ MainWindow::MainWindow(const QString &username, QWidget *parent)
 
     if (userId != -1) {
         // Получаем пройденные курсы и уроки
+        fetchCompletedCoursesAndLessons(userId);
 
         fetchUserLevelAndExperience(userId);  // Получаем уровень и очки опыта
         loadAvailableTests();           // Загружаем доступные тесты для прохождения
@@ -300,6 +301,31 @@ void MainWindow::on_pushButton_2_clicked()
 {
     ui->testframe->show();
     ui->frame->hide();
+}
+void MainWindow::fetchCompletedCoursesAndLessons(int userId) {
+    // Получение количества пройденных курсов
+    QSqlQuery queryCourses;
+    queryCourses.prepare("SELECT COUNT(DISTINCT course_id) AS completed_courses FROM user_progress WHERE user_id = ? AND is_completed = TRUE;");
+    queryCourses.addBindValue(userId);
+
+    if (queryCourses.exec() && queryCourses.next()) {
+        int completedCourses = queryCourses.value(0).toInt();
+        ui->completedCoursesLabel->setText("Пройденные курсы: " + QString::number(completedCourses));
+    } else {
+        qDebug() << "Ошибка получения количества пройденных курсов:" << queryCourses.lastError().text();
+    }
+
+    // Получение количества пройденных уроков
+    QSqlQuery queryLessons;
+    queryLessons.prepare("SELECT COUNT(DISTINCT lesson_id) AS completed_lessons FROM user_progress WHERE user_id = ? AND is_completed = TRUE;");
+    queryLessons.addBindValue(userId);
+
+    if (queryLessons.exec() && queryLessons.next()) {
+        int completedLessons = queryLessons.value(0).toInt();
+        ui->completedLessonsLabel->setText("Пройденные уроки: " + QString::number(completedLessons));
+    } else {
+        qDebug() << "Ошибка получения количества пройденных уроков:" << queryLessons.lastError().text();
+    }
 }
 
 
