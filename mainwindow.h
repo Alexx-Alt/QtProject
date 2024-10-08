@@ -31,6 +31,8 @@ private slots:
 
     void on_finishTestButton_clicked();
 
+    void on_pushButton_3_clicked();
+
 private:
     Ui::MainWindow *ui;
     QString currentUserName; // Переменная для хранения имени пользователя

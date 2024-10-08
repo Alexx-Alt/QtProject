@@ -429,6 +429,93 @@ QPushButton:pressed {
      </property>
     </widget>
    </widget>
+   <widget class="QFrame" name="courseframe">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>90</y>
+      <width>1681</width>
+      <height>901</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QComboBox" name="coursecomboBox">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>100</y>
+       <width>391</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="courselabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>330</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>330</y>
+      <width>51</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: transparent;    /* Сделать фон кнопки прозрачным */
+    border: none;                     /* Убрать рамку, если не нужна */
+    color: white;                     /* Цвет текста */
+    font-size: 16px;                  /* Размер шрифта */
+    padding: 10px;                    /* Отступы внутри кнопки */
+}
+
+QPushButton:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Цвет фона при наведении (полупрозрачный) */
+}
+
+QPushButton:pressed {
+    background-color: rgba(255, 255, 255, 0.4); /* Цвет фона при нажатии (более темный полупрозрачный) */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="upmenuTest">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>20</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font:  14pt &quot;Segoe UI&quot;;
+</string>
+    </property>
+    <property name="text">
+     <string>Тесты</string>
+    </property>
+   </widget>
    <zorder>frame</zorder>
    <zorder>testframe</zorder>
    <zorder>booklabel</zorder>
@@ -438,6 +525,10 @@ QPushButton:pressed {
    <zorder>widget</zorder>
    <zorder>widget_2</zorder>
    <zorder>upmenuHome</zorder>
+   <zorder>courseframe</zorder>
+   <zorder>courselabel</zorder>
+   <zorder>pushButton_3</zorder>
+   <zorder>upmenuTest</zorder>
   </widget>
  </widget>
  <resources/>

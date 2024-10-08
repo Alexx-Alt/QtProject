@@ -18,13 +18,17 @@ MainWindow::MainWindow(const QString &username, QWidget *parent)
 
     QPixmap pixmap(":/img/house.png");
     QPixmap book(":/img/book.png");
+    QPixmap course(":/img/course.png");
     ui->frame->hide();
     ui->testframe->hide();
+    ui->courseframe->hide();
 
     ui->menulabel->setPixmap(pixmap);
     ui->booklabel->setPixmap(book);
+    ui->courselabel->setPixmap(course);
     ui->menulabel->setScaledContents(true);
     ui->booklabel->setScaledContents(true);
+    ui->courselabel->setScaledContents(true);
     ui->widget->setFixedWidth(1);                                   // Устанавливаем фиксированную ширину
     ui->widget_2->setFixedHeight(1);                                   // Устанавливаем фиксированную ширину
     ui->widget->setStyleSheet("background-color: gray;");           // Устанавливаем цвет линии
@@ -109,7 +113,9 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->testframe->hide();
     ui->frame->show();
+    ui->courseframe->hide();
     ui->upmenuHome->setStyleSheet("font: 700 14pt;");
+    ui->upmenuTest->setStyleSheet("font: 14pt;");
 }
 
 // Функция загрузки доступных тестов
@@ -265,6 +271,7 @@ void MainWindow::on_finishTestButton_clicked()
     // Скрываем интерфейс теста
     ui->testframe->hide();
     ui->frame->show();
+    ui->courseframe->hide();
 }
 int MainWindow::getUserIdByUsername(const QString &username) {
     QSqlQuery query;
@@ -301,6 +308,9 @@ void MainWindow::on_pushButton_2_clicked()
 {
     ui->testframe->show();
     ui->frame->hide();
+    ui->courseframe->hide();
+    ui->upmenuTest->setStyleSheet("font: 700 14pt;");
+    ui->upmenuHome->setStyleSheet("font: 14pt;");
 }
 void MainWindow::fetchCompletedCoursesAndLessons(int userId) {
     // Получение количества пройденных курсов
@@ -327,5 +337,21 @@ void MainWindow::fetchCompletedCoursesAndLessons(int userId) {
         qDebug() << "Ошибка получения количества пройденных уроков:" << queryLessons.lastError().text();
     }
 }
+void MainWindow::on_pushButton_3_clicked()
+{
+    ui->courseframe->show();
+    QSqlQuery query;
+    query.prepare("SELECT id, title FROM courses");
 
+    if (query.exec()) {
+        while (query.next()) {
+            int testId = query.value("id").toInt();
+            QString testTitle = query.value("title").toString();
+
+            ui->coursecomboBox->addItem(testTitle, testId);  // Добавляем тесты в ComboBox для выбора
+        }
+    } else {
+        qDebug() << "Ошибка загрузки доступных курсов:" << query.lastError().text();
+    }
+}
 
