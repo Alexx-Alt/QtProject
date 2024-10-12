@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "myframe.h"
 
 #include <QMainWindow>
 
@@ -33,6 +34,8 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_pushButton_4_clicked();
+
 private:
     Ui::MainWindow *ui;
     QString currentUserName; // Переменная для хранения имени пользователя
@@ -43,6 +46,8 @@ private:
     void loadAvailableTests();
     void loadTestQuestions();
     void showQuestion(int index);
+    void fetchCompletedTestsCount(int userId);
+    void showFrameAtPosition();
 
 
 
@@ -54,6 +59,7 @@ private:
 
     QVector<int> questionIds;              // Список ID вопросов текущего теста
     QVector<QString> questions;            // Список текстов вопросов
+    MyFrame *frame;
 
 
 };

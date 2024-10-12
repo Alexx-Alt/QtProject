@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "myframe.h"
+
 #include <QPropertyAnimation>
 #include <QPropertyAnimation>
 #include <QSplitter>
@@ -14,6 +16,10 @@ MainWindow::MainWindow(const QString &username, QWidget *parent)
     , ui(new Ui::MainWindow), currentUserName(username)
 {
     ui->setupUi(this);
+
+    MyFrame *frame = new MyFrame(this);
+    frame->hide();
+
     setFixedSize(1800, 1000); // Установите фиксированный размер окна
 
     QPixmap pixmap(":/img/house.png");
@@ -45,7 +51,8 @@ MainWindow::MainWindow(const QString &username, QWidget *parent)
         fetchCompletedCoursesAndLessons(userId);
 
         fetchUserLevelAndExperience(userId);  // Получаем уровень и очки опыта
-        loadAvailableTests();           // Загружаем доступные тесты для прохождения
+        loadAvailableTests(); // Загружаем доступные тесты для прохождения
+        fetchCompletedTestsCount(userId);
 
     } else {
         QMessageBox::warning(this, "Ошибка", "Не удалось найти пользователя.");
@@ -111,6 +118,8 @@ void MainWindow::updateUserExperience(int userId, int pointsEarned) {
 // Отображение домашней страницы
 void MainWindow::on_pushButton_clicked()
 {
+
+    frame->hide();
     ui->testframe->hide();
     ui->frame->show();
     ui->courseframe->hide();
@@ -231,8 +240,7 @@ void MainWindow::on_nextQuestionButton_clicked()
 }
 
 // Обработчик нажатия кнопки "Завершить тест"
-void MainWindow::on_finishTestButton_clicked()
-{
+void MainWindow::on_finishTestButton_clicked() {
     int userId = getUserIdByUsername(currentUserName);
 
     // Рассчитываем очки (10 очков за каждый правильный ответ)
@@ -240,16 +248,13 @@ void MainWindow::on_finishTestButton_clicked()
     // Обновляем очки пользователя с помощью метода updateUserExperience
     updateUserExperience(userId, score);
 
-    // Обновляем очки пользователя в базе данных
-    QSqlQuery query;
-    query.prepare("UPDATE users SET experience_points = experience_points + ? WHERE id = ?");
-    query.addBindValue(score);
-    query.addBindValue(userId);
+    // Обновляем количество выполненных тестов в таблице user_progress
+    QSqlQuery progressQuery;
+    progressQuery.prepare("UPDATE user_progress SET completed_tests_count = completed_tests_count + 1 WHERE user_id = ?");
+    progressQuery.addBindValue(userId);
 
-    if (query.exec()) {
-        QMessageBox::information(this, "Тест завершен", "Вы завершили тест. Набранные очки: " + QString::number(score));
-    } else {
-        QMessageBox::warning(this, "Ошибка", "Не удалось обновить очки опыта: " + query.lastError().text());
+    if (!progressQuery.exec()) {
+        qDebug() << "Ошибка обновления количества выполненных тестов:" << progressQuery.lastError().text();
     }
 
     // Сохраняем результат теста в таблице `test_results`
@@ -258,6 +263,8 @@ void MainWindow::on_finishTestButton_clicked()
     resultQuery.addBindValue(userId);
     resultQuery.addBindValue(currentTestId);
     resultQuery.addBindValue(score);
+    qDebug() << score << "очки";
+    QMessageBox::information(this, "Успех", "Вы набрали " + QString::number(score) + " очков");
 
     if (!resultQuery.exec()) {
         qDebug() << "Ошибка сохранения результата теста:" << resultQuery.lastError().text();
@@ -267,6 +274,7 @@ void MainWindow::on_finishTestButton_clicked()
     currentTestId = -1;
     currentQuestionIndex = 0;
     correctAnswers = 0;
+
 
     // Скрываем интерфейс теста
     ui->testframe->hide();
@@ -306,6 +314,7 @@ void MainWindow::fetchUserLevelAndExperience(int userId) {
 
 void MainWindow::on_pushButton_2_clicked()
 {
+
     ui->testframe->show();
     ui->frame->hide();
     ui->courseframe->hide();
@@ -353,5 +362,46 @@ void MainWindow::on_pushButton_3_clicked()
     } else {
         qDebug() << "Ошибка загрузки доступных курсов:" << query.lastError().text();
     }
+}
+
+void MainWindow::fetchCompletedTestsCount(int userId) {
+    QSqlQuery query;
+    query.prepare("SELECT completed_tests_count FROM user_progress WHERE user_id = ?");
+    query.addBindValue(userId);
+
+    if (query.exec() && query.next()) {
+        int completedTests = query.value("completed_tests_count").toInt();
+        ui->completedTestsLabel->setText("Пройденные тесты: " + QString::number(completedTests));
+    } else {
+        qDebug() << "Ошибка получения количества пройденных тестов:" << query.lastError().text();
+    }
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+
+    try {
+          // Скрываем предыдущие виджеты или фреймы
+        showFrameAtPosition();  // Используем метод для отображения фрейма
+    } catch (const std::exception &e) {
+        qDebug() << "Ошибка:" << e.what();  // Печатаем сообщение об ошибке
+    } catch (...) {
+        qDebug() << "Неизвестная ошибка";  // Печатаем сообщение о неизвестной ошибке
+    }
+}
+void MainWindow::showFrameAtPosition() {
+
+    ui->frame->hide();
+    ui->testframe->hide();
+    ui->courseframe->hide();
+    frame = new MyFrame(this);
+
+
+    // Задаём размер и положение фрейма
+    frame->setGeometry(120, 90, 1681, 911);  // Позиция (100, 200), размер 300x200
+
+
+    // Отображаем фрейм
+    frame->show();
 }
 

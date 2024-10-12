@@ -12,16 +12,19 @@ SOURCES += \
     database.cpp \
     login.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    myframe.cpp
 
 HEADERS += \
     database.h \
     login.h \
-    mainwindow.h
+    mainwindow.h \
+    myframe.h
 
 FORMS += \
     login.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    myframe.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -242,6 +242,22 @@ QPushButton:pressed {
        <string>TextLabel</string>
       </property>
      </widget>
+     <widget class="QLabel" name="completedTestsLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>130</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="widget_4" native="true">
      <property name="geometry">
@@ -516,8 +532,22 @@ QPushButton:pressed {
      <string>Тесты</string>
     </property>
    </widget>
-   <zorder>frame</zorder>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>430</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
    <zorder>testframe</zorder>
+   <zorder>courseframe</zorder>
+   <zorder>frame</zorder>
    <zorder>booklabel</zorder>
    <zorder>pushButton_2</zorder>
    <zorder>menulabel</zorder>
@@ -525,10 +555,10 @@ QPushButton:pressed {
    <zorder>widget</zorder>
    <zorder>widget_2</zorder>
    <zorder>upmenuHome</zorder>
-   <zorder>courseframe</zorder>
    <zorder>courselabel</zorder>
    <zorder>pushButton_3</zorder>
    <zorder>upmenuTest</zorder>
+   <zorder>pushButton_4</zorder>
   </widget>
  </widget>
  <resources/>
