@@ -144,19 +144,6 @@
      <string>Пароль</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="LoginButton">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>140</y>
-      <width>80</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Войти</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="RegistrationButton">
     <property name="geometry">
      <rect>
@@ -171,8 +158,22 @@
     </property>
    </widget>
   </widget>
+  <widget class="QPushButton" name="LoginButton">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>290</y>
+     <width>80</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Войти</string>
+   </property>
+  </widget>
   <zorder>frame</zorder>
   <zorder>registerframe</zorder>
+  <zorder>LoginButton</zorder>
  </widget>
  <resources/>
  <connections/>
