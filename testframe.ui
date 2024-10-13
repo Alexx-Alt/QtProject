@@ -183,16 +183,16 @@
     border-radius: 10px;              /* Закругление углов */
 }</string>
    </property>
-   <widget class="QTableWidget" name="resultsTable">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>40</y>
-      <width>511</width>
-      <height>201</height>
-     </rect>
-    </property>
-   </widget>
+  </widget>
+  <widget class="QTableWidget" name="resultsTable">
+   <property name="geometry">
+    <rect>
+     <x>970</x>
+     <y>300</y>
+     <width>561</width>
+     <height>261</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

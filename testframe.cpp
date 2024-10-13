@@ -5,6 +5,13 @@
 #include <QSqlError>
 #include <QMessageBox>
 #include <QTableWidget>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QtCharts/QChart>
+#include <QtCharts>
+
+
 
 TestFrame::TestFrame(const QString &username, QWidget *parent)
     : QFrame(parent)
@@ -134,6 +141,7 @@ void TestFrame::on_nextQuestionButton_clicked()
 
 // Обработчик нажатия кнопки "Завершить тест"
 void TestFrame::on_finishTestButton_clicked() {
+
     int userId = getUserIdByUsername(currentUserName);
 
     // Рассчитываем очки (10 очков за каждый правильный ответ)
@@ -175,6 +183,7 @@ void TestFrame::on_finishTestButton_clicked() {
 
 }
 int TestFrame::getUserIdByUsername(const QString &username) {
+
     QSqlQuery query;
     query.prepare("SELECT id FROM users WHERE username = ?"); // Предполагается, что имя пользователя хранится в поле username
     query.addBindValue(username);
@@ -236,14 +245,14 @@ void TestFrame::updateUserExperience(int userId, int pointsEarned) {
         qDebug() << "Уровень успешно обновлен! Текущий уровень:" << currentLevel;
     }
 }
-void TestFrame::loadUserTestResults(int userId) {
-    QSqlQuery query;
 
-    // Выполняем запрос к базе данных, чтобы получить результаты тестов пользователя
-    query.prepare("SELECT t.title, ta.score "
+void TestFrame::loadUserTestResults(int userId) {
+
+    QSqlQuery query;
+    query.prepare("SELECT ta.completed_at, ta.score "
                   "FROM test_answers ta "
-                  "JOIN tests t ON ta.test_id = t.id "
-                  "WHERE ta.user_id = ?");
+                  "WHERE ta.user_id = ? "
+                  "ORDER BY ta.completed_at ASC");
     query.addBindValue(userId);
 
     if (!query.exec()) {
@@ -251,30 +260,44 @@ void TestFrame::loadUserTestResults(int userId) {
         return;
     }
 
-    //настройки tablewidget
-    ui->resultsTable->verticalHeader()->setVisible(false);
-    ui->resultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->resultsTable->setSelectionMode(QAbstractItemView::NoSelection);
-    ui->resultsTable->setFocusPolicy(Qt::NoFocus);  // Отключает выделение ячеек при фокусе
+    // Создаем серию для результатов
+    QLineSeries *scoreSeries = new QLineSeries();
+    // Создаем серию для дат
+    QLineSeries *dateSeries = new QLineSeries();
 
-    ui->resultsTable->setColumnCount(2);  // Установите количество столбцов (в данном случае 2)
-    ui->resultsTable->setHorizontalHeaderLabels(QStringList() << "Название теста" << "Результат");
-    ui->resultsTable->setRowCount(0);
-    int row = 0;
-
-    // Проходим по результатам и добавляем их в таблицу
     while (query.next()) {
-        ui->resultsTable->insertRow(row);
+        QDateTime completedAt = query.value(0).toDateTime(); // Получаем дату завершения
+        int score = query.value(1).toInt(); // Получаем результат теста
 
-        QString testName = query.value(0).toString();
-        QString score = query.value(1).toString();
-        //QString completedAt = query.value(2).toString();
-
-        ui->resultsTable->setItem(row, 0, new QTableWidgetItem(testName));
-        ui->resultsTable->setItem(row, 1, new QTableWidgetItem(score));
-       // ui->resultsTable->setItem(row, 2, new QTableWidgetItem(completedAt));
-
-        row++;
+        // Добавляем данные в серии
+        scoreSeries->append(completedAt.toMSecsSinceEpoch(), score); // Используем дату как x-координату
+        dateSeries->append(completedAt.toMSecsSinceEpoch(), score); // Можно также использовать для другого графика
     }
-    ui->resultsTable->resizeColumnsToContents();  // Подгонка ширины столбцов под содержимое
+
+    // Создаем график
+    QChart *chart = new QChart();
+    chart->addSeries(scoreSeries);
+    chart->createDefaultAxes();
+    chart->setTitle("Результаты тестов по датам");
+
+    // Настройка осей
+    QDateTimeAxis *axisX = new QDateTimeAxis();
+    axisX->setTitleText("Дата завершения");
+    axisX->setFormat("dd.MM.yyyy"); // Формат даты
+    chart->setAxisX(axisX, scoreSeries); // Привязываем ось к серии результатов
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setTitleText("Результат");
+    chart->setAxisY(axisY, scoreSeries); // Привязываем ось к серии результатов
+
+    // Создаем QChartView и устанавливаем его геометрию
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // Устанавливаем позицию и размеры графика
+    chartView->setGeometry(970, 300, 561, 400); // X, Y, ширина, высота
+
+    // Добавляем график к главному виджету
+    chartView->setParent(this); // Убедитесь, что this - это ваш основной виджет
+    chartView->show(); // Отображаем график
 }
