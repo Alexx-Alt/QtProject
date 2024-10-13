@@ -32,6 +32,8 @@ private slots:
 
     void updateUserExperience(int userId, int pointsEarned);
 
+    void loadUserTestResults(int userId);
+
 
 
 private:

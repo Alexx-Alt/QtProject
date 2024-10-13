@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QTableWidget>
 
 TestFrame::TestFrame(const QString &username, QWidget *parent)
     : QFrame(parent)
@@ -11,6 +12,8 @@ TestFrame::TestFrame(const QString &username, QWidget *parent)
 {
     ui->setupUi(this);
     loadAvailableTests();
+    int userId = getUserIdByUsername(currentUserName);
+    loadUserTestResults(userId);
 }
 
 TestFrame::~TestFrame()
@@ -232,4 +235,46 @@ void TestFrame::updateUserExperience(int userId, int pointsEarned) {
     } else {
         qDebug() << "Уровень успешно обновлен! Текущий уровень:" << currentLevel;
     }
+}
+void TestFrame::loadUserTestResults(int userId) {
+    QSqlQuery query;
+
+    // Выполняем запрос к базе данных, чтобы получить результаты тестов пользователя
+    query.prepare("SELECT t.title, ta.score "
+                  "FROM test_answers ta "
+                  "JOIN tests t ON ta.test_id = t.id "
+                  "WHERE ta.user_id = ?");
+    query.addBindValue(userId);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса на получение результатов тестов:" << query.lastError().text();
+        return;
+    }
+
+    //настройки tablewidget
+    ui->resultsTable->verticalHeader()->setVisible(false);
+    ui->resultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->resultsTable->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->resultsTable->setFocusPolicy(Qt::NoFocus);  // Отключает выделение ячеек при фокусе
+
+    ui->resultsTable->setColumnCount(2);  // Установите количество столбцов (в данном случае 2)
+    ui->resultsTable->setHorizontalHeaderLabels(QStringList() << "Название теста" << "Результат");
+    ui->resultsTable->setRowCount(0);
+    int row = 0;
+
+    // Проходим по результатам и добавляем их в таблицу
+    while (query.next()) {
+        ui->resultsTable->insertRow(row);
+
+        QString testName = query.value(0).toString();
+        QString score = query.value(1).toString();
+        //QString completedAt = query.value(2).toString();
+
+        ui->resultsTable->setItem(row, 0, new QTableWidgetItem(testName));
+        ui->resultsTable->setItem(row, 1, new QTableWidgetItem(score));
+       // ui->resultsTable->setItem(row, 2, new QTableWidgetItem(completedAt));
+
+        row++;
+    }
+    ui->resultsTable->resizeColumnsToContents();  // Подгонка ширины столбцов под содержимое
 }
