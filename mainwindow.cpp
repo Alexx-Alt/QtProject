@@ -75,4 +75,3 @@ void MainWindow::showtestpage()
     testpage->setGeometry(120, 90, 1681, 911);
     testpage->show();
 }
-
