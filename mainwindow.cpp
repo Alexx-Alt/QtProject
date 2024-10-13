@@ -53,7 +53,6 @@ void MainWindow::hideallframe()
         delete testpage;
         testpage = nullptr;
     }
-
 }
 //функция чтоб убрать выделение со всез лейблов верхенего дублирования меню
 void MainWindow::allfont()
