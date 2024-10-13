@@ -14,16 +14,21 @@ class login : public QWidget
 public:
     explicit login(QWidget *parent = nullptr);
     ~login();
-    QString getUsername() const; // Новый метод для получения имени пользователя
-private slots:
-    void on_loginButton_clicked();
 
+private slots:
+    void on_LoginButton_clicked();
 
     void on_RegistrationButton_clicked();
 
+    void on_loginButton_clicked();
+
     void on_backregister_clicked();
 
-    void on_LoginButton_clicked();
+    void showError(const QString &message);
+
+    void showWarning(const QString &message);
+
+    bool isUsernameUnique(const QString &username);
 
 private:
     Ui::login *ui;

@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>706</width>
-    <height>603</height>
+    <width>663</width>
+    <height>358</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Форма входа</string>
   </property>
   <widget class="QFrame" name="registerframe">
    <property name="geometry">
@@ -36,9 +36,12 @@
      <rect>
       <x>40</x>
       <y>20</y>
-      <width>113</width>
+      <width>200</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Имя</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="EmailLabel">
@@ -46,19 +49,28 @@
      <rect>
       <x>40</x>
       <y>60</y>
-      <width>113</width>
+      <width>200</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Электронная почта</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="PasswordLabel">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>90</y>
-      <width>113</width>
+      <y>100</y>
+      <width>200</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::EchoMode::Password</enum>
+    </property>
+    <property name="placeholderText">
+     <string>Пароль</string>
     </property>
    </widget>
    <widget class="QPushButton" name="loginButton">
@@ -71,7 +83,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Зарегестрироваться</string>
+     <string>Зарегистрироваться</string>
     </property>
    </widget>
    <widget class="QPushButton" name="backregister">
@@ -108,19 +120,28 @@
      <rect>
       <x>50</x>
       <y>20</y>
-      <width>113</width>
+      <width>141</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="placeholderText">
+     <string>Имя пользователя</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="PasswordLabel2">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>50</y>
-      <width>113</width>
+      <y>60</y>
+      <width>141</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::EchoMode::Password</enum>
+    </property>
+    <property name="placeholderText">
+     <string>Пароль</string>
     </property>
    </widget>
    <widget class="QPushButton" name="LoginButton">
@@ -146,7 +167,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>регистрация</string>
+     <string>Регистрация</string>
     </property>
    </widget>
   </widget>

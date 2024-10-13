@@ -1,7 +1,8 @@
 #include "database.h"
 #include <QDebug>
 #include <QSqlError>
-
+/**
+настройка подключение к бд*/
 Database::Database(const QString &host, int port, const QString &dbName, const QString &user, const QString &password) {
     db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName(host);
@@ -14,7 +15,7 @@ Database::Database(const QString &host, int port, const QString &dbName, const Q
 Database::~Database() {
     close(); // Закрываем подключение при уничтожении объекта
 }
-
+/**открытие подключения*/
 bool Database::open() {
     if (!db.open()) {
         qDebug() << "Ошибка подключения к базе данных:" << db.lastError().text();
