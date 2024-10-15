@@ -266,6 +266,19 @@ QPushButton:pressed {
      <string>PushButton</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="ProfileButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>480</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Прфиль</string>
+    </property>
+   </widget>
    <zorder>courselabel</zorder>
    <zorder>menucoursebutton</zorder>
    <zorder>testframe</zorder>
@@ -278,6 +291,7 @@ QPushButton:pressed {
    <zorder>upmenuHome</zorder>
    <zorder>upmenuTest</zorder>
    <zorder>pushButton_4</zorder>
+   <zorder>ProfileButton</zorder>
   </widget>
  </widget>
  <resources/>

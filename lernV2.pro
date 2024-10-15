@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     mainpage.cpp \
     mainwindow.cpp \
+    profile.cpp \
     testframe.cpp \
     uisetup.cpp
 
@@ -23,6 +24,7 @@ HEADERS += \
     login.h \
     mainpage.h \
     mainwindow.h \
+    profile.h \
     testframe.h \
     uisetup.h
 
@@ -30,6 +32,7 @@ FORMS += \
     login.ui \
     mainpage.ui \
     mainwindow.ui \
+    profile.ui \
     testframe.ui
 
 # Default rules for deployment.

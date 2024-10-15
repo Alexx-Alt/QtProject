@@ -6,7 +6,7 @@
 
 MainWindow::MainWindow(const QString &username, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), currentUserName(username), mainpage(nullptr), testpage(nullptr), uiSetup(ui)
+    , ui(new Ui::MainWindow), currentUserName(username), mainpage(nullptr), testpage(nullptr), uiSetup(ui), profile(nullptr)
 {
     ui->setupUi(this);
     //размер окна
@@ -42,6 +42,12 @@ void MainWindow::on_menutestbutton_clicked()
 
     ui->upmenuTest->setStyleSheet("font: 700 14pt;");
 }
+void MainWindow::on_ProfileButton_clicked()
+{
+    hideallframe();
+    allfont();
+    showprofile();
+}
 //функция чтоб скрыть все фреймы
 void MainWindow::hideallframe()
 {
@@ -52,6 +58,10 @@ void MainWindow::hideallframe()
     if (testpage) {
         delete testpage;
         testpage = nullptr;
+    }
+    if (profile) {
+        delete profile;
+        profile = nullptr;
     }
 }
 //функция чтоб убрать выделение со всез лейблов верхенего дублирования меню
@@ -74,3 +84,12 @@ void MainWindow::showtestpage()
     testpage->setGeometry(120, 90, 1681, 911);
     testpage->show();
 }
+void MainWindow::showprofile(){
+
+    profile = new Profile(currentUserName, this);
+    profile->setGeometry(120, 90, 1681, 911);
+    profile->show();
+
+
+}
+

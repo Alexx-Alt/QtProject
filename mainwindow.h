@@ -5,6 +5,7 @@
 #include "mainpage.h"
 #include "uisetup.h"
 #include "testframe.h"
+#include "profile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,11 +30,15 @@ private slots:
 
     void on_menutestbutton_clicked();
 
+    void on_ProfileButton_clicked();
+
     void hideallframe();
 
     void allfont();
 
     void showtestpage();
+
+    void showprofile();
 
 
 
@@ -44,5 +49,6 @@ private:
     MainPage *mainpage;
     TestFrame *testpage;
     UiSetup uiSetup;
+    Profile *profile;
 };
 #endif // MAINWINDOW_H

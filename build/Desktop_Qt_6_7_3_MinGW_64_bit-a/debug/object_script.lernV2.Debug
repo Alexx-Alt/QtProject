@@ -3,10 +3,12 @@ debug/login.o
 debug/main.o
 debug/mainpage.o
 debug/mainwindow.o
+debug/profile.o
 debug/testframe.o
 debug/uisetup.o
 debug/qrc_Scr.o
 debug/moc_login.o
 debug/moc_mainpage.o
 debug/moc_mainwindow.o
+debug/moc_profile.o
 debug/moc_testframe.o
