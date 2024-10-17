@@ -45,6 +45,8 @@ void Profile::fetchUserLevelAndExperience(int userId) {
     }
 
 }
+
+//функция для вывода тегов пользователя
 void Profile::fetchuserregs(int userId)
 {
     QSqlQuery query;
