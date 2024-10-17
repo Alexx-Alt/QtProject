@@ -48,8 +48,25 @@ void Profile::fetchUserLevelAndExperience(int userId) {
 void Profile::fetchuserregs(int userId)
 {
     QSqlQuery query;
-    query.prepare("SELECT ts.title "
-                  "FROM tegs_storage ts "
-                  "WHERE ts.user_id = ? " );
+    QString str;
+    query.prepare("SELECT tegs_storage.title FROM lern.user_tegs "
+                        "join tegs_storage "
+                        "ON user_tegs.tegs_id=tegs_storage.id "
+                        "Where user_tegs.user_id = ? " );
+    query.addBindValue(userId);
+    if (query.exec()) {
+        QStringList tags; // Список для хранения тегов
+        while (query.next()) {
+            QString tag = query.value(0).toString().trimmed();
+            tags.append(tag); // Добавляем тег в список
+        }
 
+        // Объединяем все теги в одну строку, разделяя их запятыми
+        str = tags.join(", ");
+        qDebug() << str;
+
+        ui->tegslabel->setText(str); // Устанавливаем текст на метку
+    } else {
+        qDebug() << "Ошибка выполнения запроса:" << query.lastError().text(); // Выводим ошибку
+    }
 }

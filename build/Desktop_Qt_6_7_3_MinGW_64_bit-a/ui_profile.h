@@ -33,7 +33,7 @@ public:
         userlabel->setStyleSheet(QString::fromUtf8("font: 14pt \"Segoe UI\";"));
         tegslabel = new QLabel(Profile);
         tegslabel->setObjectName("tegslabel");
-        tegslabel->setGeometry(QRect(130, 220, 45, 15));
+        tegslabel->setGeometry(QRect(130, 220, 481, 121));
 
         retranslateUi(Profile);
 
