@@ -10,6 +10,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    coursespage.cpp \
     database.cpp \
     login.cpp \
     main.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     uisetup.cpp
 
 HEADERS += \
+    coursespage.h \
     database.h \
     login.h \
     mainpage.h \
@@ -29,6 +31,7 @@ HEADERS += \
     uisetup.h
 
 FORMS += \
+    coursespage.ui \
     login.ui \
     mainpage.ui \
     mainwindow.ui \

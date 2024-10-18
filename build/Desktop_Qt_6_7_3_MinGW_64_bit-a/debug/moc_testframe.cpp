@@ -39,6 +39,7 @@ constexpr auto qt_meta_stringdata_CLASSTestFrameENDCLASS = QtMocHelpers::stringD
     "on_nextQuestionButton_clicked",
     "",
     "loadAvailableTests",
+    "userId",
     "on_startTestButton_clicked",
     "loadTestQuestions",
     "showQuestion",
@@ -47,7 +48,6 @@ constexpr auto qt_meta_stringdata_CLASSTestFrameENDCLASS = QtMocHelpers::stringD
     "getUserIdByUsername",
     "username",
     "updateUserExperience",
-    "userId",
     "pointsEarned",
     "loadUserTestResults"
 );
@@ -71,25 +71,25 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSTestFrameENDCLASS[] = {
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
        1,    0,   68,    2, 0x08,    1 /* Private */,
-       3,    0,   69,    2, 0x08,    2 /* Private */,
-       4,    0,   70,    2, 0x08,    3 /* Private */,
-       5,    0,   71,    2, 0x08,    4 /* Private */,
-       6,    1,   72,    2, 0x08,    5 /* Private */,
-       8,    0,   75,    2, 0x08,    7 /* Private */,
-       9,    1,   76,    2, 0x08,    8 /* Private */,
-      11,    2,   79,    2, 0x08,   10 /* Private */,
-      14,    1,   84,    2, 0x08,   13 /* Private */,
+       3,    1,   69,    2, 0x08,    2 /* Private */,
+       5,    0,   72,    2, 0x08,    4 /* Private */,
+       6,    0,   73,    2, 0x08,    5 /* Private */,
+       7,    1,   74,    2, 0x08,    6 /* Private */,
+       9,    0,   77,    2, 0x08,    8 /* Private */,
+      10,    1,   78,    2, 0x08,    9 /* Private */,
+      12,    2,   81,    2, 0x08,   11 /* Private */,
+      14,    1,   86,    2, 0x08,   14 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    4,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    8,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    7,
-    QMetaType::Void,
-    QMetaType::Int, QMetaType::QString,   10,
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,   12,   13,
-    QMetaType::Void, QMetaType::Int,   12,
+    QMetaType::Int, QMetaType::QString,   11,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    4,   13,
+    QMetaType::Void, QMetaType::Int,    4,
 
        0        // eod
 };
@@ -107,6 +107,7 @@ Q_CONSTINIT const QMetaObject TestFrame::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'loadAvailableTests'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
         // method 'on_startTestButton_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'loadTestQuestions'
@@ -137,7 +138,7 @@ void TestFrame::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         (void)_t;
         switch (_id) {
         case 0: _t->on_nextQuestionButton_clicked(); break;
-        case 1: _t->loadAvailableTests(); break;
+        case 1: _t->loadAvailableTests((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 2: _t->on_startTestButton_clicked(); break;
         case 3: _t->loadTestQuestions(); break;
         case 4: _t->showQuestion((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;

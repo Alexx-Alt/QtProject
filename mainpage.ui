@@ -62,22 +62,6 @@
     border-radius: 10px;              /* Закругление углов */
 }</string>
    </property>
-   <widget class="QLabel" name="completedCoursesLabel">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>321</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
-    </property>
-    <property name="text">
-     <string>TextLabel</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="completedLessonsLabel">
     <property name="geometry">
      <rect>
@@ -176,6 +160,23 @@
     border: 1px solid gray;           /* Рамка серого цвета */
     border-radius: 10px;              /* Закругление углов */
 }</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="completedCoursesLabel">
+   <property name="geometry">
+    <rect>
+     <x>1000</x>
+     <y>80</y>
+     <width>321</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 16pt &quot;Segoe UI&quot;;
+</string>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

@@ -18,9 +18,10 @@ TestFrame::TestFrame(const QString &username, QWidget *parent)
     , ui(new Ui::TestFrame), currentUserName(username)
 {
     ui->setupUi(this);
-    loadAvailableTests();
+
     int userId = getUserIdByUsername(currentUserName);
     loadUserTestResults(userId);
+    loadAvailableTests(userId);
 }
 
 TestFrame::~TestFrame()
@@ -28,10 +29,14 @@ TestFrame::~TestFrame()
     delete ui;
 }
 // Функция загрузки доступных тестов
-void TestFrame::loadAvailableTests()
+void TestFrame::loadAvailableTests(int userId)
 {
     QSqlQuery query;
-    query.prepare("SELECT id, title FROM tests");
+    query.prepare("SELECT c.id, c.title "
+                        "FROM lern.tests c "
+                        "JOIN lern.user_tegs ut ON c.tegs_id = ut.tegs_id "
+                        "WHERE ut.user_id = ? ");
+    query.addBindValue(userId);
 
     if (query.exec()) {
         while (query.next()) {
@@ -176,12 +181,8 @@ void TestFrame::on_finishTestButton_clicked() {
     currentTestId = -1;
     currentQuestionIndex = 0;
     correctAnswers = 0;
-
-
-    // Скрываем интерфейс теста
-    //this->deleteLater();
-
 }
+//функция получения id по имени
 int TestFrame::getUserIdByUsername(const QString &username) {
 
     QSqlQuery query;
@@ -195,6 +196,7 @@ int TestFrame::getUserIdByUsername(const QString &username) {
         return -1; // Возвращаем -1 в случае ошибки или если пользователь не найден
     }
 }
+//функция обновления уровня
 void TestFrame::updateUserExperience(int userId, int pointsEarned) {
     QSqlQuery query;
 
@@ -245,7 +247,7 @@ void TestFrame::updateUserExperience(int userId, int pointsEarned) {
         qDebug() << "Уровень успешно обновлен! Текущий уровень:" << currentLevel;
     }
 }
-
+//функция вывода результатов теста
 void TestFrame::loadUserTestResults(int userId) {
 
     QSqlQuery query;

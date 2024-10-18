@@ -23,13 +23,13 @@ public:
     QWidget *widget_7;
     QLabel *welcomeLabel;
     QWidget *widget_5;
-    QLabel *completedCoursesLabel;
     QLabel *completedLessonsLabel;
     QLabel *experienceLabel;
     QLabel *completedTestsLabel;
     QWidget *widget_3;
     QWidget *widget_6;
     QWidget *widget_4;
+    QLabel *completedCoursesLabel;
 
     void setupUi(QFrame *MainPage)
     {
@@ -56,10 +56,6 @@ public:
 "    border: 1px solid gray;           /* \320\240\320\260\320\274\320\272\320\260 \321\201\320\265\321\200\320\276\320\263\320\276 \321\206\320\262\320\265\321\202\320\260 */\n"
 "    border-radius: 10px;              /* \320\227\320\260\320\272\321\200\321\203\320\263\320\273\320\265\320\275\320\270\320\265 \321\203\320\263\320\273\320\276\320\262 */\n"
 "}"));
-        completedCoursesLabel = new QLabel(widget_5);
-        completedCoursesLabel->setObjectName("completedCoursesLabel");
-        completedCoursesLabel->setGeometry(QRect(20, 10, 321, 31));
-        completedCoursesLabel->setStyleSheet(QString::fromUtf8("font: 16pt \"Segoe UI\";"));
         completedLessonsLabel = new QLabel(widget_5);
         completedLessonsLabel->setObjectName("completedLessonsLabel");
         completedLessonsLabel->setGeometry(QRect(20, 50, 321, 31));
@@ -96,6 +92,11 @@ public:
 "    border: 1px solid gray;           /* \320\240\320\260\320\274\320\272\320\260 \321\201\320\265\321\200\320\276\320\263\320\276 \321\206\320\262\320\265\321\202\320\260 */\n"
 "    border-radius: 10px;              /* \320\227\320\260\320\272\321\200\321\203\320\263\320\273\320\265\320\275\320\270\320\265 \321\203\320\263\320\273\320\276\320\262 */\n"
 "}"));
+        completedCoursesLabel = new QLabel(MainPage);
+        completedCoursesLabel->setObjectName("completedCoursesLabel");
+        completedCoursesLabel->setGeometry(QRect(1000, 80, 321, 31));
+        completedCoursesLabel->setStyleSheet(QString::fromUtf8("font: 16pt \"Segoe UI\";\n"
+""));
 
         retranslateUi(MainPage);
 
@@ -106,10 +107,10 @@ public:
     {
         MainPage->setWindowTitle(QCoreApplication::translate("MainPage", "Frame", nullptr));
         welcomeLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
-        completedCoursesLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
         completedLessonsLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
         experienceLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
         completedTestsLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
+        completedCoursesLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
     } // retranslateUi
 
 };

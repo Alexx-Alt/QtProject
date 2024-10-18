@@ -18,7 +18,7 @@ public:
 private slots:
     void on_nextQuestionButton_clicked();
 
-    void loadAvailableTests();
+    void loadAvailableTests(int userId);
 
     void on_startTestButton_clicked();
 
