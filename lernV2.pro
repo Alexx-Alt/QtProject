@@ -12,6 +12,7 @@ CONFIG += c++17
 SOURCES += \
     coursespage.cpp \
     database.cpp \
+    forumpage.cpp \
     login.cpp \
     main.cpp \
     mainpage.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
 HEADERS += \
     coursespage.h \
     database.h \
+    forumpage.h \
     login.h \
     mainpage.h \
     mainwindow.h \
@@ -32,6 +34,7 @@ HEADERS += \
 
 FORMS += \
     coursespage.ui \
+    forumpage.ui \
     login.ui \
     mainpage.ui \
     mainwindow.ui \

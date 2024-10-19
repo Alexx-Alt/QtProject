@@ -1,5 +1,6 @@
 release/coursespage.o
 release/database.o
+release/forumpage.o
 release/login.o
 release/main.o
 release/mainpage.o
@@ -9,6 +10,7 @@ release/testframe.o
 release/uisetup.o
 release/qrc_Scr.o
 release/moc_coursespage.o
+release/moc_forumpage.o
 release/moc_login.o
 release/moc_mainpage.o
 release/moc_mainwindow.o

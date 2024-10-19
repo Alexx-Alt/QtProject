@@ -7,6 +7,7 @@
 #include "testframe.h"
 #include "profile.h"
 #include "coursespage.h"
+#include "forumpage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,6 +36,8 @@ private slots:
 
     void on_menucoursebutton_clicked();
 
+    void on_forumbutton_clicked();
+
     void hideallframe();
 
     void allfont();
@@ -44,6 +47,8 @@ private slots:
     void showprofile();
 
     void showcourse();
+
+    void showforum();
 
 
 
@@ -56,5 +61,6 @@ private:
     UiSetup uiSetup;
     Profile *profile;
     CoursesPage *coursepage;
+    ForumPage *forumpage;
 };
 #endif // MAINWINDOW_H

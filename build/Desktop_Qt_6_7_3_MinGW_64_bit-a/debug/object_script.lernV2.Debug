@@ -1,5 +1,6 @@
 debug/coursespage.o
 debug/database.o
+debug/forumpage.o
 debug/login.o
 debug/main.o
 debug/mainpage.o
@@ -9,6 +10,7 @@ debug/testframe.o
 debug/uisetup.o
 debug/qrc_Scr.o
 debug/moc_coursespage.o
+debug/moc_forumpage.o
 debug/moc_login.o
 debug/moc_mainpage.o
 debug/moc_mainwindow.o

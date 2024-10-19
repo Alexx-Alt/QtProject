@@ -6,7 +6,7 @@
 
 MainWindow::MainWindow(const QString &username, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), currentUserName(username), mainpage(nullptr), testpage(nullptr), uiSetup(ui), profile(nullptr), coursepage(nullptr)
+    , ui(new Ui::MainWindow), currentUserName(username), mainpage(nullptr), testpage(nullptr), uiSetup(ui), profile(nullptr), coursepage(nullptr), forumpage(nullptr)
 {
     ui->setupUi(this);
     //размер окна
@@ -54,6 +54,12 @@ void MainWindow::on_menucoursebutton_clicked()
     allfont();
     showcourse();
 }
+void MainWindow::on_forumbutton_clicked()
+{
+    hideallframe();
+    allfont();
+    showforum();
+}
 //функция чтоб скрыть все фреймы
 void MainWindow::hideallframe()
 {
@@ -72,6 +78,10 @@ void MainWindow::hideallframe()
     if (coursepage) {
         delete coursepage;
         coursepage = nullptr;
+    }
+    if (forumpage) {
+        delete forumpage;
+        forumpage = nullptr;
     }
 }
 //функция чтоб убрать выделение со всез лейблов верхенего дублирования меню
@@ -106,6 +116,13 @@ void MainWindow::showcourse(){
     coursepage = new CoursesPage(currentUserName, this);
     coursepage->setGeometry(120, 90, 1681, 911);
     coursepage->show();
+
+}
+void MainWindow::showforum(){
+
+    forumpage = new ForumPage(currentUserName, this);
+    forumpage->setGeometry(120, 90, 1681, 911);
+    forumpage->show();
 
 }
 
