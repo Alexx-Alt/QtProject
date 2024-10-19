@@ -29,6 +29,8 @@ private:
     void fetchCompletedTestsCount(int userId);
 
     void updateUserExperience(int userId);
+
+    void testforum();
 };
 
 #endif // MAINPAGE_H

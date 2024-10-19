@@ -27,6 +27,7 @@ public:
     QLabel *experienceLabel;
     QLabel *completedTestsLabel;
     QWidget *widget_3;
+    QLabel *testlabel;
     QWidget *widget_6;
     QWidget *widget_4;
     QLabel *completedCoursesLabel;
@@ -76,6 +77,12 @@ public:
 "    border: 1px solid gray;           /* \320\240\320\260\320\274\320\272\320\260 \321\201\320\265\321\200\320\276\320\263\320\276 \321\206\320\262\320\265\321\202\320\260 */\n"
 "    border-radius: 10px;              /* \320\227\320\260\320\272\321\200\321\203\320\263\320\273\320\265\320\275\320\270\320\265 \321\203\320\263\320\273\320\276\320\262 */\n"
 "}"));
+        testlabel = new QLabel(widget_3);
+        testlabel->setObjectName("testlabel");
+        testlabel->setGeometry(QRect(50, 60, 371, 91));
+        testlabel->setStyleSheet(QString::fromUtf8("font: 16pt \"Segoe UI\";\n"
+"\n"
+""));
         widget_6 = new QWidget(MainPage);
         widget_6->setObjectName("widget_6");
         widget_6->setGeometry(QRect(980, 630, 321, 271));
@@ -110,6 +117,7 @@ public:
         completedLessonsLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
         experienceLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
         completedTestsLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
+        testlabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
         completedCoursesLabel->setText(QCoreApplication::translate("MainPage", "TextLabel", nullptr));
     } // retranslateUi
 

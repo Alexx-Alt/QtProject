@@ -17,6 +17,7 @@ MainPage::MainPage(const QString &username, QWidget *parent)
     fetchCompletedCoursesAndLessons(userId);
     fetchCompletedTestsCount(userId);
     updateUserExperience(userId);
+    testforum();
 
 }
 
@@ -130,4 +131,17 @@ void MainPage::updateUserExperience(int userId) {
     } else {
         qDebug() << "Уровень успешно обновлен! Текущий уровень:" << currentLevel;
     }
+}
+void MainPage::testforum(){
+
+    QSqlQuery query;
+    QString str;
+    query.prepare("SELECT text FROM lern.forum_question"
+                        "join users "
+                        "ON forum_question.author_id = users.id " );
+    if(query.exec()){
+        str = query.value(0).toString();
+    }
+    ui->testlabel->setText(str);
+
 }
