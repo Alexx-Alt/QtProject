@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
         qDebug() << "Токен недействителен или отсутствует, показываем окно входа";
         l.show();
     }
-    //l.show();
+
     return a.exec();
 }
 
