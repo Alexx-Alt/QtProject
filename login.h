@@ -30,6 +30,12 @@ private slots:
 
     bool isUsernameUnique(const QString &username);
 
+    QString generateToken();
+
+    void saveToken(const QString &token);
+
+    void checkToken();
+
 private:
     Ui::login *ui;
     QString hashPassword(const QString &password);

@@ -6,17 +6,23 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QSettings>
+#include <QDateTime>
+#include <QUuid>
+#include <QDebug>
 
 login::login(QWidget *parent)
     : QWidget(parent), ui(new Ui::login)
 {
     ui->setupUi(this);
     ui->registerframe->hide();
+    checkToken();
 }
 
 login::~login()
 {
     delete ui;
+
 }
 
 // Кнопка входа
@@ -41,6 +47,24 @@ void login::on_LoginButton_clicked()
         const QString storedHash = query.value(0).toString(); // Получаем хранимый хэш пароля
         if (storedHash == hashPassword(password)) { // Сравниваем с введенным паролем
             QMessageBox::information(this, "Успех", "Вы успешно вошли в систему!");
+
+            // Генерация токена (можно использовать UUID или другой метод)
+            QString token = generateToken();
+            qDebug() << token;
+
+            // Сохранение токена и даты создания
+            saveToken(token);
+            // Сохранение токена в таблице users
+            QSqlQuery updateQuery;
+            updateQuery.prepare("UPDATE users SET token = ? WHERE username = ?");
+            updateQuery.addBindValue(token);
+            updateQuery.addBindValue(username);
+
+            if (!updateQuery.exec()) {
+                showError("Ошибка сохранения токена: " + updateQuery.lastError().text());
+                return;
+            }
+
             auto *mainWindow = new MainWindow(usernameCons);
             mainWindow->show(); // Открываем главное окно
             close(); // Закрываем окно входа
@@ -51,7 +75,46 @@ void login::on_LoginButton_clicked()
         showWarning("Пользователь не найден.");
     }
 }
+// Генерация токена
+QString login::generateToken()
+{
+    // Простой пример токена. В реальном приложении используйте более безопасный метод.
+    return QUuid::createUuid().toString();
+}
 
+// Сохранение токена в QSettings
+void login::saveToken(const QString &token)
+{
+    QSettings settings("MyApp", "MyAppName");
+    settings.setValue("userToken", token);
+    settings.setValue("username", ui->NameLabel2->text());
+    settings.setValue("tokenCreationDate", QDateTime::currentDateTime()); // Сохранение даты создания токена
+
+}
+// Проверка токена
+void login::checkToken()
+{
+    // QSettings settings("MyApp", "MyAppName");
+    // QString token = settings.value("userToken").toString();
+    // QDateTime creationDate = settings.value("tokenCreationDate").toDateTime();
+
+    // // Проверяем, действителен ли токен (30 дней)
+    // if (!token.isEmpty() && creationDate.isValid()) {
+    //     if (creationDate.secsTo(QDateTime::currentDateTime()) < 30 * 24 * 60 * 60) {
+    //         // Токен действителен
+    //         QMessageBox::information(this, "Токен", "Токен действителен: " + token);
+    //         // Здесь вы можете открыть главное окно без запроса входа
+    //         // auto *mainWindow = new MainWindow(usernameCons);
+    //         // mainWindow->show(); // Открываем главное окно
+    //         // close(); // Закрываем окно входа
+    //     } else {
+    //         // Токен истек
+    //         settings.remove("userToken");
+    //         settings.remove("tokenCreationDate");
+    //         QMessageBox::warning(this, "Токен", "Токен истек. Пожалуйста, войдите снова.");
+    //     }
+    // }
+}
 // Кнопка показывания формы регистрации
 void login::on_RegistrationButton_clicked()
 {
