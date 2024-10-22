@@ -1,6 +1,7 @@
 #include "login.h"
 #include "ui_login.h"
 #include "mainwindow.h"
+#include "jwt.h"
 
 
 #include <QCryptographicHash>
@@ -32,11 +33,9 @@ void login::on_LoginButton_clicked()
 {
     const QString username = ui->NameLabel2->text();
     const QString password = ui->PasswordLabel2->text();
-    usernameCons = username; // Сохраняем имя пользователя
 
-    // Создание запроса для проверки пользователя
     QSqlQuery query;
-    query.prepare("SELECT password FROM users WHERE username = ?");
+    query.prepare("SELECT id, password FROM users WHERE username = ?");
     query.addBindValue(username);
 
     if (!query.exec()) {
@@ -44,32 +43,18 @@ void login::on_LoginButton_clicked()
         return;
     }
 
-    // Проверка, нашелся ли пользователь
     if (query.next()) {
-        const QString storedHash = query.value(0).toString(); // Получаем хранимый хэш пароля
-        if (storedHash == hashPassword(password)) { // Сравниваем с введенным паролем
+        const QString storedHash = query.value("password").toString();
+        if (storedHash == hashPassword(password)) {
+            int userId = query.value("id").toInt();
+            QString token = generateJwtToken(userId, username);
+            saveToken(token);
+
             QMessageBox::information(this, "Успех", "Вы успешно вошли в систему!");
 
-            // Генерация токена (можно использовать UUID или другой метод)
-            QString token = generateToken();
-            qDebug() << token;
-
-            // Сохранение токена и даты создания
-            saveToken(token);
-            // Сохранение токена в таблице users
-            QSqlQuery updateQuery;
-            updateQuery.prepare("UPDATE users SET token = ? WHERE username = ?");
-            updateQuery.addBindValue(token);
-            updateQuery.addBindValue(username);
-
-            if (!updateQuery.exec()) {
-                showError("Ошибка сохранения токена: " + updateQuery.lastError().text());
-                return;
-            }
-
-            auto *mainWindow = new MainWindow(usernameCons);
-            mainWindow->show(); // Открываем главное окно
-            close(); // Закрываем окно входа
+            auto *mainWindow = new MainWindow(username);
+            mainWindow->show();
+            close();
         } else {
             showWarning("Неверный пароль.");
         }
@@ -78,10 +63,19 @@ void login::on_LoginButton_clicked()
     }
 }
 // Генерация токена
-QString login::generateToken()
+QString login::generateJwtToken(int userId, const QString &username)
 {
-    // Простой пример токена. В реальном приложении используйте более безопасный метод.
-    return QUuid::createUuid().toString();
+    QDateTime issuedAt = QDateTime::currentDateTime();
+    QDateTime expiresAt = issuedAt.addDays(30);
+
+    QJsonObject payload;
+    payload["user_id"] = userId;
+    payload["username"] = username;
+    payload["iat"] = issuedAt.toSecsSinceEpoch();
+    payload["exp"] = expiresAt.toSecsSinceEpoch();
+
+    QString secret = "your_secret_key"; // Замените на ваш секретный ключ
+    return JWT::encode(payload, secret);
 }
 
 // Сохранение токена в QSettings
@@ -89,8 +83,6 @@ void login::saveToken(const QString &token)
 {
     QSettings settings("MyApp", "MyAppName");
     settings.setValue("userToken", token);
-    settings.setValue("username", ui->NameLabel2->text());
-    settings.setValue("tokenCreationDate", QDateTime::currentDateTime()); // Сохранение даты создания токена
 
 }
 

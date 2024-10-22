@@ -15,49 +15,50 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //MainWindow w;
 
-    login l;
-    // Создание объекта Database и подключение к базе данных
+    qDebug() << "Application started";
+
     Database db("127.0.0.1", 3306, "lern", "root", "Pocket_2564");
-
     if (!db.open()) {
-        return -1; // Завершаем программу в случае ошибки подключения
+        qDebug() << "Database connection failed";
+        return -1;
     }
-    QSettings settings("MyApp", "MyAppName"); // Замените на свои названия
+    qDebug() << "Database connected successfully";
+
+    QSettings settings("MyApp", "MyAppName");
     QString storedToken = settings.value("userToken").toString();
-    QDateTime tokenCreationDate = settings.value("tokenCreationDate").toDateTime();
-    QString username = settings.value("username").toString(); // Получаем имя пользователя из настроек
-    qDebug() << username;
 
-    // Проверяем действительность токена (30 дней)
-    if (!storedToken.isEmpty() && tokenCreationDate.isValid() && tokenCreationDate.addDays(30) > QDateTime::currentDateTime()) {
-        // Токен действителен, теперь проверим токен в базе данных
-        QSqlQuery query;
-        query.prepare("SELECT token FROM users WHERE username = ?");
-        query.addBindValue(username);
+    if (!storedToken.isEmpty()) {
+        qDebug() << "Token found";
+        QJsonObject payload;
+        QString secret = "your_secret_key";
+        if (JWT::decode(storedToken, payload, secret)) {
+            qDebug() << "Token decoded successfully";
+            qint64 expirationTime = payload["exp"].toVariant().toLongLong();
+            QDateTime expiresAt = QDateTime::fromSecsSinceEpoch(expirationTime);
 
-        if (query.exec() && query.next()) {
-            QString dbToken = query.value(0).toString(); // Получаем токен из базы данных
-
-            if (storedToken == dbToken) {
-                // Токены совпадают, открываем главное окно с именем пользователя
-                MainWindow *mainWindow = new MainWindow(username); // Передаем имя пользователя
+            if (expiresAt > QDateTime::currentDateTime()) {
+                QString username = payload["username"].toString();
+                qDebug() << "Creating MainWindow for user:" << username;
+                MainWindow *mainWindow = new MainWindow(username);
                 mainWindow->show();
-                qDebug() << username;
+                qDebug() << "MainWindow should be visible now";
             } else {
-                qDebug() << "Токены не совпадают, показываем окно входа";
-                l.show();
+                qDebug() << "Token expired, showing login window";
+                login *l = new login();
+                l->show();
             }
         } else {
-            qDebug() << "Ошибка при получении токена из базы данных или пользователь не найден";
-            l.show();
+            qDebug() << "Token decode failed, showing login window";
+            login *l = new login();
+            l->show();
         }
     } else {
-        qDebug() << "Токен недействителен или отсутствует, показываем окно входа";
-        l.show();
+        qDebug() << "No token found, showing login window";
+        login *l = new login();
+        l->show();
     }
 
+    qDebug() << "Entering event loop";
     return a.exec();
 }
-
