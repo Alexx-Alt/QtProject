@@ -197,6 +197,8 @@ void ForumPage::displaySelectedQuestion(int questionId) {
                 QListWidgetItem* item = new QListWidgetItem();
                 item->setData(Qt::DisplayRole, "Ответ от " + answerAuthor + ":\n" + answerText);
                 ui->answersListWidget->addItem(item);
+
+
             }
         }
     }
