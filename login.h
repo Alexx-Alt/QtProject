@@ -34,7 +34,7 @@ private slots:
 
     void saveToken(const QString &token);
 
-    void checkToken();
+
 
 private:
     Ui::login *ui;

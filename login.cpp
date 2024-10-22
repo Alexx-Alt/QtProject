@@ -2,6 +2,7 @@
 #include "ui_login.h"
 #include "mainwindow.h"
 
+
 #include <QCryptographicHash>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -11,12 +12,13 @@
 #include <QUuid>
 #include <QDebug>
 
+
 login::login(QWidget *parent)
     : QWidget(parent), ui(new Ui::login)
 {
     ui->setupUi(this);
     ui->registerframe->hide();
-    checkToken();
+
 }
 
 login::~login()
@@ -91,30 +93,7 @@ void login::saveToken(const QString &token)
     settings.setValue("tokenCreationDate", QDateTime::currentDateTime()); // Сохранение даты создания токена
 
 }
-// Проверка токена
-void login::checkToken()
-{
-    // QSettings settings("MyApp", "MyAppName");
-    // QString token = settings.value("userToken").toString();
-    // QDateTime creationDate = settings.value("tokenCreationDate").toDateTime();
 
-    // // Проверяем, действителен ли токен (30 дней)
-    // if (!token.isEmpty() && creationDate.isValid()) {
-    //     if (creationDate.secsTo(QDateTime::currentDateTime()) < 30 * 24 * 60 * 60) {
-    //         // Токен действителен
-    //         QMessageBox::information(this, "Токен", "Токен действителен: " + token);
-    //         // Здесь вы можете открыть главное окно без запроса входа
-    //         // auto *mainWindow = new MainWindow(usernameCons);
-    //         // mainWindow->show(); // Открываем главное окно
-    //         // close(); // Закрываем окно входа
-    //     } else {
-    //         // Токен истек
-    //         settings.remove("userToken");
-    //         settings.remove("tokenCreationDate");
-    //         QMessageBox::warning(this, "Токен", "Токен истек. Пожалуйста, войдите снова.");
-    //     }
-    // }
-}
 // Кнопка показывания формы регистрации
 void login::on_RegistrationButton_clicked()
 {

@@ -13,6 +13,7 @@ SOURCES += \
     coursespage.cpp \
     database.cpp \
     forumpage.cpp \
+    jwt.cpp \
     login.cpp \
     main.cpp \
     mainpage.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     coursespage.h \
     database.h \
     forumpage.h \
+    jwt.h \
     login.h \
     mainpage.h \
     mainwindow.h \
@@ -40,6 +42,7 @@ FORMS += \
     mainwindow.ui \
     profile.ui \
     testframe.ui
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -1,6 +1,7 @@
 release/coursespage.o
 release/database.o
 release/forumpage.o
+release/jwt.o
 release/login.o
 release/main.o
 release/mainpage.o

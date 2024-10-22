@@ -1,6 +1,7 @@
 debug/coursespage.o
 debug/database.o
 debug/forumpage.o
+debug/jwt.o
 debug/login.o
 debug/main.o
 debug/mainpage.o
