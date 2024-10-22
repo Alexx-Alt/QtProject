@@ -25,6 +25,7 @@ ForumPage::ForumPage(const QString &username, QWidget *parent)
     connect(ui->addQuestionButton, &QPushButton::clicked, this, [this, userId]() {
         on_addQuestionButton_clicked(userId);  // Вызов слота с передачей userId
     });
+    ui->selectedQuestionTextEdit->setReadOnly(true);
 
 }
 
@@ -55,15 +56,9 @@ struct ForumQuestion {
 };
 // Обработка клика по элементу списка
 void ForumPage::on_forumListWidget_itemClicked(QListWidgetItem *item) {
-    QString itemText = item->text();
-
-    // Пример: нужно извлечь ID вопроса из текста или данных элемента
-    // Здесь предполагается, что текст элемента в формате: "Вопрос: [текст] (ID: [номер])"
-    int idStart = itemText.indexOf("(ID: ") + 5;
-    int idEnd = itemText.indexOf(")", idStart);
-    selectedQuestionId = itemText.mid(idStart, idEnd - idStart).toInt();
-
-    qDebug() << "Выбран вопрос с ID:" << selectedQuestionId;
+    int questionId = item->data(Qt::UserRole).toInt();
+    selectedQuestionId = questionId;  // Обновляем выбранный ID вопроса
+    displaySelectedQuestion(questionId);
 }
 // Функция загрузки вопросов и ответов
 void ForumPage::loadForumQuestions() {
@@ -94,14 +89,15 @@ void ForumPage::displayForumQuestion(const ForumQuestion &question) {
 
     if (question.parent_id == 0) {
         // Основной вопрос
-        item->setText("Вопрос: " + question.text + "\nАвтор: " + question.author_name + " (ID: " + QString::number(question.id) + ")");
-
+        item->setText("Вопрос: " + question.text + "\nАвтор: " + question.author_name);
     } else {
         // Ответ на вопрос
-        item->setText("  Ответ: " + question.text + "\nАвтор: " + question.author_name + " (ID: " + QString::number(question.id) + ")");  // С отступом
-        // Отображаем с небольшим отступом, чтобы визуально отличить ответы
+        item->setText("  Ответ: " + question.text + "\nАвтор: " + question.author_name);
         item->setBackground(Qt::white);
     }
+
+    // Устанавливаем ID вопроса в UserRole
+    item->setData(Qt::UserRole, question.id);
 
     // Добавляем элемент в список вопросов
     ui->forumListWidget->addItem(item);
@@ -158,6 +154,76 @@ void ForumPage::on_addAnswerButton_clicked(int userId) {
             qDebug() << "Ошибка добавления ответа:" << query.lastError().text();
         }
     }
+}
+// В forumpage.cpp добавьте:
+void ForumPage::displaySelectedQuestion(int questionId) {
+    QSqlQuery query;
+    query.prepare("SELECT fq.text, u.username, fq.id "
+                  "FROM forum_question fq "
+                  "JOIN users u ON fq.author_id = u.id "
+                  "WHERE fq.id = ?");
+    query.addBindValue(questionId);
+
+    if (query.exec() && query.next()) {
+        QString questionText = query.value(0).toString();
+        QString authorName = query.value(1).toString();
+
+        // Применяем форматирование к тексту вопроса
+        QString formattedQuestion = formatText(questionText);
+
+        // Отображаем отформатированный вопрос в правой панели
+        ui->selectedQuestionTextEdit->setHtml("Вопрос от <b>" + authorName + "</b>:<br><br>" + formattedQuestion);
+
+        // Делаем TextEdit только для чтения
+        ui->selectedQuestionTextEdit->setReadOnly(true);
+
+        // Загружаем ответы
+        query.prepare("SELECT fq.text, u.username "
+                      "FROM forum_question fq "
+                      "JOIN users u ON fq.author_id = u.id "
+                      "WHERE fq.parent_id = ?");
+        query.addBindValue(questionId);
+
+        ui->answersListWidget->clear();
+        if (query.exec()) {
+            while (query.next()) {
+                QString answerText = query.value(0).toString();
+                QString answerAuthor = query.value(1).toString();
+
+                // Применяем форматирование к тексту ответа
+                QString formattedAnswer = formatText(answerText);
+
+                // Добавляем форматированный ответ в список
+                QListWidgetItem* item = new QListWidgetItem();
+                item->setData(Qt::DisplayRole, "Ответ от " + answerAuthor + ":\n" + answerText);
+                ui->answersListWidget->addItem(item);
+            }
+        }
+    }
+}
+QString ForumPage::formatText(const QString &text) {
+    QString formattedText = text;
+
+    // Жирный текст (**текст**)
+    QRegularExpression boldRegex("\\*\\*(.*?)\\*\\*");
+    formattedText.replace(boldRegex, "<b>\\1</b>");
+
+    // Курсив (*текст*)
+    QRegularExpression italicRegex("\\*(.*?)\\*");
+    formattedText.replace(italicRegex, "<i>\\1</i>");
+
+    // Подчеркнутый текст (__текст__)
+    QRegularExpression underlineRegex("__(.*?)__");
+    formattedText.replace(underlineRegex, "<u>\\1</u>");
+
+    // Зачеркнутый текст (~~текст~~)
+    QRegularExpression strikeRegex("~~(.*?)~~");
+    formattedText.replace(strikeRegex, "<s>\\1</s>");
+
+    // Замена переносов строк на HTML-переносы
+    formattedText.replace("\n", "<br>");
+
+    return formattedText;
 }
 
 

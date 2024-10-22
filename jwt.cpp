@@ -30,7 +30,7 @@ bool JWT::decode(const QString &token, QJsonObject &payload, const QString &secr
     QString payloadEncoded = parts[1];
     QString signatureEncoded = parts[2];
 
-    QByteArray headerBA = base64UrlDecode(headerEncoded);
+   // QByteArray headerBA = base64UrlDecode(headerEncoded);
     QByteArray payloadBA = base64UrlDecode(payloadEncoded);
     QByteArray signatureBA = base64UrlDecode(signatureEncoded);
 
@@ -62,4 +62,20 @@ QByteArray JWT::base64UrlDecode(const QString &input)
     case 3: base64.append("="); break;
     }
     return QByteArray::fromBase64(base64.toUtf8());
+}
+bool JWT::verify(const QString &token, const QString &secret)
+{
+    QStringList parts = token.split(".");
+    if (parts.size() != 3) return false;
+
+    QString headerEncoded = parts[0];
+    QString payloadEncoded = parts[1];
+    QString signatureEncoded = parts[2];
+
+    QString dataToSign = headerEncoded + "." + payloadEncoded;
+    QByteArray expectedSignature = QMessageAuthenticationCode::hash(dataToSign.toUtf8(), secret.toUtf8(), QCryptographicHash::Sha256);
+
+    QByteArray actualSignature = base64UrlDecode(signatureEncoded);
+
+    return (actualSignature == expectedSignature);
 }

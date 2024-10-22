@@ -1,8 +1,14 @@
 #include "mainpage.h"
 #include "ui_mainpage.h"
+#include "jwt.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSettings>
+#include <QDateTime>
+#include <QUuid>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 MainPage::MainPage(const QString &username, QWidget *parent)
     : QFrame(parent), ui(new Ui::MainPage)
@@ -13,7 +19,7 @@ MainPage::MainPage(const QString &username, QWidget *parent)
 
     int userId = getUserIdByUsername(currentUserName);
 
-    fetchUserLevelAndExperience(userId);
+    fetchUserLevelAndExperience();
     fetchCompletedCoursesAndLessons(userId);
     fetchCompletedTestsCount(userId);
     updateUserExperience(userId);
@@ -26,23 +32,82 @@ MainPage::~MainPage()
     delete ui;
 }
 //функция для отображения уровня и кол-во очков пользователя
-void MainPage::fetchUserLevelAndExperience(int userId) {
-    QSqlQuery query;
-    query.prepare("SELECT level, experience_points FROM users WHERE id = ?");
-    query.addBindValue(userId);
+void MainPage::fetchUserLevelAndExperience() {
+    QSettings settings("MyApp", "MyAppName");
+    QString token = settings.value("userToken").toString();
 
-    if (query.exec() && query.next()) {
-        int level = query.value("level").toInt();
-        int experiencePoints = query.value("experience_points").toInt();
-
-        // Отображение на главной странице
-        ui->welcomeLabel->setText("Добро пожаловать, " + currentUserName + "! Текущий уровень: " + QString::number(level));
-        ui->experienceLabel->setText("Очки опыта: " + QString::number(experiencePoints));
-
-    } else {
-        qDebug() << "Ошибка получения уровня и очков опыта:" << query.lastError().text();
+    if (token.isEmpty()) {
+        qDebug() << "Токен отсутствует. Пользователь не авторизован.";
+        // Перенаправление на страницу входа
+        return;
     }
 
+    // Получаем секретный ключ из защищенного источника
+    QString secretKey = getUserSecretKey(token);
+
+    QJsonObject payload;
+    if (JWT::decode(token, payload, secretKey)) {
+        QString username = payload["username"].toString();
+        qint64 expirationTime = payload["exp"].toVariant().toLongLong();
+
+        // Проверка срока действия токена
+        if (QDateTime::currentSecsSinceEpoch() > expirationTime) {
+            qDebug() << "Срок действия токена истек";
+            // Логика для обновления токена или перенаправления на страницу входа
+            return;
+        }
+
+        QSqlQuery query;
+        query.prepare("SELECT level, experience_points FROM users WHERE username = ?");
+        query.addBindValue(username);
+
+        if (query.exec() && query.next()) {
+            int level = query.value("level").toInt();
+            int experiencePoints = query.value("experience_points").toInt();
+
+            ui->welcomeLabel->setText("Добро пожаловать, " + username + "! Текущий уровень: " + QString::number(level));
+            ui->experienceLabel->setText("Очки опыта: " + QString::number(experiencePoints));
+        } else {
+            qDebug() << "Ошибка получения данных пользователя:" << query.lastError().text();
+        }
+    } else {
+        qDebug() << "Токен недействителен";
+        // Логика для обработки недействительного токена
+    }
+}
+// Вспомогательная функция для получения секретного ключа
+QString MainPage::getUserSecretKey(const QString &token) {
+    QStringList parts = token.split('.');
+    if (parts.size() != 3) {
+        qDebug() << "Неверный формат токена";
+        return QString();
+    }
+
+    QByteArray payloadJson = QByteArray::fromBase64(parts[1].toUtf8());
+    QJsonDocument payloadDoc = QJsonDocument::fromJson(payloadJson);
+    if (payloadDoc.isNull()) {
+        qDebug() << "Ошибка декодирования payload токена";
+        return QString();
+    }
+
+    QJsonObject payload = payloadDoc.object();
+    QString username = payload["username"].toString();
+
+    if (username.isEmpty()) {
+        qDebug() << "Токен не содержит имя пользователя";
+        return QString();
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT secret_key FROM users WHERE username = ?");
+    query.addBindValue(username);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toString();
+    } else {
+        qDebug() << "Ошибка получения секретного ключа:" << query.lastError().text();
+        return QString();
+    }
 }
 //функция для отображения кол-во выполненых курсов и уроков пользователя
 void MainPage::fetchCompletedCoursesAndLessons(int userId) {

@@ -20,7 +20,7 @@ private:
 
     QString currentUserName;
 
-    void fetchUserLevelAndExperience(int userId);
+    void fetchUserLevelAndExperience();
 
     int getUserIdByUsername(const QString &username);
 
@@ -29,6 +29,8 @@ private:
     void fetchCompletedTestsCount(int userId);
 
     void updateUserExperience(int userId);
+
+    QString getUserSecretKey(const QString &token);
 
 };
 

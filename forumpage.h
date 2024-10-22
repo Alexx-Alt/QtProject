@@ -44,7 +44,11 @@ private:
 
     void displayForumQuestion(const ForumQuestion &question);
 
-    void on_forumListWidget_itemClicked(QListWidgetItem *item); // Метод для обработки кликов по элементам списка
+    void on_forumListWidget_itemClicked(QListWidgetItem *item); // Метод для обработки кликов по элементам
+
+    void displaySelectedQuestion(int questionId);
+
+    QString formatText(const QString &text);
 };
 
 #endif // FORUMPAGE_H

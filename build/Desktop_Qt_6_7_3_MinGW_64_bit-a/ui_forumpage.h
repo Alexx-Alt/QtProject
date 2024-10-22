@@ -26,12 +26,14 @@ public:
     QTextEdit *newQuestionTextEdit;
     QPushButton *addAnswerButton;
     QTextEdit *newAnswerTextEdit;
+    QTextEdit *selectedQuestionTextEdit;
+    QListWidget *answersListWidget;
 
     void setupUi(QFrame *ForumPage)
     {
         if (ForumPage->objectName().isEmpty())
             ForumPage->setObjectName("ForumPage");
-        ForumPage->resize(922, 730);
+        ForumPage->resize(1342, 1019);
         forumListWidget = new QListWidget(ForumPage);
         forumListWidget->setObjectName("forumListWidget");
         forumListWidget->setGeometry(QRect(250, 230, 441, 321));
@@ -47,6 +49,12 @@ public:
         newAnswerTextEdit = new QTextEdit(ForumPage);
         newAnswerTextEdit->setObjectName("newAnswerTextEdit");
         newAnswerTextEdit->setGeometry(QRect(710, 220, 161, 111));
+        selectedQuestionTextEdit = new QTextEdit(ForumPage);
+        selectedQuestionTextEdit->setObjectName("selectedQuestionTextEdit");
+        selectedQuestionTextEdit->setGeometry(QRect(890, 220, 431, 401));
+        answersListWidget = new QListWidget(ForumPage);
+        answersListWidget->setObjectName("answersListWidget");
+        answersListWidget->setGeometry(QRect(900, 630, 256, 192));
 
         retranslateUi(ForumPage);
 

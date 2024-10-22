@@ -54,34 +54,56 @@ int main(int argc, char *argv[])
     QString username;
 
     if (!storedToken.isEmpty()) {
-            // Проверяем токен
-            try {
-                QString secretKey = getUserSecretKey(username);
-                QJsonObject payload;
-                JWT::decode(storedToken, payload, secretKey);
-
-                // Извлекаем username из payload
-                username = payload["username"].toString();
-
-                qint64 exp = payload["exp"].toVariant().toLongLong();
-                QDateTime expirationDate = QDateTime::fromSecsSinceEpoch(exp);
-
-                if (expirationDate > QDateTime::currentDateTime()) {
-                    // Токен действителен, открываем главное окно
-                    MainWindow *mainWindow = new MainWindow(username);
-                    mainWindow->show();
-                    return a.exec();
-                } else {
-                    qDebug() << "Токен истек";
-                }
-            } catch (const std::exception& e) {
-                qDebug() << "Ошибка при проверке токена:" << e.what();
+        try {
+            // Разделяем токен на части
+            QStringList tokenParts = storedToken.split('.');
+            if (tokenParts.size() != 3) {
+                throw std::runtime_error("Неверный формат токена");
             }
+
+            // Декодируем заголовок и полезную нагрузку
+            QByteArray headerJson = QByteArray::fromBase64(tokenParts[0].toUtf8());
+            QByteArray payloadJson = QByteArray::fromBase64(tokenParts[1].toUtf8());
+
+            QJsonDocument headerDoc = QJsonDocument::fromJson(headerJson);
+            QJsonDocument payloadDoc = QJsonDocument::fromJson(payloadJson);
+
+            if (headerDoc.isNull() || payloadDoc.isNull()) {
+                throw std::runtime_error("Ошибка декодирования токена");
+            }
+
+            QJsonObject payload = payloadDoc.object();
+            username = payload["username"].toString();
+
+            if (username.isEmpty()) {
+                throw std::runtime_error("Токен не содержит имя пользователя");
+            }
+
+            QString secretKey = getUserSecretKey(username);
+
+            // Проверка подписи токена
+            if (!JWT::verify(storedToken, secretKey)) {
+                throw std::runtime_error("Подпись токена недействительна");
+            }
+
+            qint64 exp = payload["exp"].toVariant().toLongLong();
+            QDateTime expirationDate = QDateTime::fromSecsSinceEpoch(exp);
+
+            if (expirationDate <= QDateTime::currentDateTime()) {
+                throw std::runtime_error("Токен истек");
+            }
+
+            // Токен действителен, открываем главное окно
+            MainWindow *mainWindow = new MainWindow(username);
+            mainWindow->show();
+            return a.exec();
+
+        } catch (const std::exception& e) {
+            qDebug() << "Ошибка при проверке токена:" << e.what();
+            // Очищаем недействительный токен
+            settings.remove("userToken");
         }
-
-
-
-
+    }
 
     // Если токен недействителен, отсутствует или произошла ошибка, показываем окно входа
     login l;
