@@ -38,6 +38,7 @@ public:
     QPushButton *pushButton_4;
     QPushButton *ProfileButton;
     QPushButton *forumbutton;
+    QPushButton *logoutButton;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -158,6 +159,9 @@ public:
         forumbutton = new QPushButton(centralwidget);
         forumbutton->setObjectName("forumbutton");
         forumbutton->setGeometry(QRect(10, 530, 80, 24));
+        logoutButton = new QPushButton(centralwidget);
+        logoutButton->setObjectName("logoutButton");
+        logoutButton->setGeometry(QRect(10, 650, 80, 22));
         MainWindow->setCentralWidget(centralwidget);
         courselabel->raise();
         menucoursebutton->raise();
@@ -173,6 +177,7 @@ public:
         pushButton_4->raise();
         ProfileButton->raise();
         forumbutton->raise();
+        logoutButton->raise();
 
         retranslateUi(MainWindow);
 
@@ -194,6 +199,7 @@ public:
         pushButton_4->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
         ProfileButton->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\321\204\320\270\320\273\321\214", nullptr));
         forumbutton->setText(QCoreApplication::translate("MainWindow", "\321\204\320\276\321\200\321\203\320\274", nullptr));
+        logoutButton->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\321\205\320\276\320\264", nullptr));
     } // retranslateUi
 
 };

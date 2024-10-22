@@ -50,6 +50,8 @@ private slots:
 
     void showforum();
 
+    void on_logoutButton_clicked();
+
 
 
 

@@ -6,7 +6,7 @@
 #include <QCryptographicHash>
 #include <QMessageBox>
 #include <QSettings>
-#include "jwt.h" // Убедитесь, что у вас есть этот заголовочный файл
+
 
 namespace Ui {
 class login;
@@ -25,6 +25,10 @@ private slots:
     void on_RegistrationButton_clicked();
     void on_loginButton_clicked();
     void on_backregister_clicked();
+    QString generateSecretKey();
+
+    QString getUserSecretKey(const QString &username);
+
 
 private:
     Ui::login *ui;
@@ -32,9 +36,10 @@ private:
     void showError(const QString &message);
     void showWarning(const QString &message);
     bool isUsernameUnique(const QString &username);
-    QString generateJwtToken(int userId, const QString &username);
+    QString generateJwtToken(const QString &username, const QString &secretKey);
     void saveToken(const QString &token);
     QString usernameCons;
+
 };
 
 #endif // LOGIN_H

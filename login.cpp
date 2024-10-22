@@ -27,15 +27,47 @@ login::~login()
     delete ui;
 
 }
+// Генерация секретного ключа
+QString login::generateSecretKey()
+{
+    return QUuid::createUuid().toString(QUuid::WithoutBraces);
+}
+// Функция для получения или создания секретного ключа пользователя
+QString login::getUserSecretKey(const QString &username) {
+    QSqlQuery query;
+    query.prepare("SELECT secret_key FROM users WHERE username = ?");
+    query.addBindValue(username);
 
-// Кнопка входа
+    if (query.exec() && query.next()) {
+        QString secretKey = query.value(0).toString();
+        if (!secretKey.isEmpty()) {
+            return secretKey;  // Возвращаем существующий ключ
+        }
+    }
+
+    // Если ключ не найден или пустой, генерируем новый
+    QString newSecretKey = QUuid::createUuid().toString(QUuid::WithoutBraces);
+
+    query.prepare("UPDATE users SET secret_key = ? WHERE username = ?");
+    query.addBindValue(newSecretKey);
+    query.addBindValue(username);
+
+    if (query.exec()) {
+        qDebug() << "Новый секретный ключ сохранен для пользователя:" << username;
+        return newSecretKey;
+    } else {
+        qDebug() << "Ошибка сохранения нового секретного ключа:" << query.lastError().text();
+        return QString();
+    }
+}
+
 void login::on_LoginButton_clicked()
 {
     const QString username = ui->NameLabel2->text();
     const QString password = ui->PasswordLabel2->text();
 
     QSqlQuery query;
-    query.prepare("SELECT id, password FROM users WHERE username = ?");
+    query.prepare("SELECT password FROM users WHERE username = ?");
     query.addBindValue(username);
 
     if (!query.exec()) {
@@ -44,11 +76,24 @@ void login::on_LoginButton_clicked()
     }
 
     if (query.next()) {
-        const QString storedHash = query.value("password").toString();
+        const QString storedHash = query.value(0).toString();
         if (storedHash == hashPassword(password)) {
-            int userId = query.value("id").toInt();
-            QString token = generateJwtToken(userId, username);
-            saveToken(token);
+            QString secretKey = getUserSecretKey(username);
+            if (secretKey.isEmpty()) {
+                showError("Не удалось получить секретный ключ");
+                return;
+            }
+
+            // Создаем JWT токен
+            QJsonObject payload;
+            payload["username"] = username;
+            payload["exp"] = QDateTime::currentDateTime().addDays(30).toSecsSinceEpoch();
+
+            QString token = JWT::encode(payload, secretKey);
+
+            // Сохраняем токен
+            QSettings settings("MyApp", "MyAppName");
+            settings.setValue("userToken", token);
 
             QMessageBox::information(this, "Успех", "Вы успешно вошли в систему!");
 
@@ -63,19 +108,18 @@ void login::on_LoginButton_clicked()
     }
 }
 // Генерация токена
-QString login::generateJwtToken(int userId, const QString &username)
+QString login::generateJwtToken(const QString &username, const QString &secretKey)
 {
-    QDateTime issuedAt = QDateTime::currentDateTime();
-    QDateTime expiresAt = issuedAt.addDays(30);
-
     QJsonObject payload;
-    payload["user_id"] = userId;
     payload["username"] = username;
-    payload["iat"] = issuedAt.toSecsSinceEpoch();
-    payload["exp"] = expiresAt.toSecsSinceEpoch();
+    payload["iat"] = QDateTime::currentDateTime().toSecsSinceEpoch(); // Время создания токена
+    payload["exp"] = QDateTime::currentDateTime().addDays(30).toSecsSinceEpoch(); // Срок действия токена (30 дней)
 
-    QString secret = "your_secret_key"; // Замените на ваш секретный ключ
-    return JWT::encode(payload, secret);
+    // Дополнительные поля, если нужно
+    // payload["role"] = "user";
+
+    // Создаем JWT токен
+    return JWT::encode(payload, secretKey);
 }
 
 // Сохранение токена в QSettings
@@ -83,6 +127,7 @@ void login::saveToken(const QString &token)
 {
     QSettings settings("MyApp", "MyAppName");
     settings.setValue("userToken", token);
+
 
 }
 

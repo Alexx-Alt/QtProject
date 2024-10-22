@@ -3,6 +3,10 @@
 #include "uisetup.h"
 #include "mainpage.h"
 #include "testframe.h"
+#include "login.h"
+
+#include <QSettings>
+#include <QMessageBox>
 
 MainWindow::MainWindow(const QString &username, QWidget *parent)
     : QMainWindow(parent)
@@ -19,6 +23,24 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_logoutButton_clicked()
+{
+    // Удаляем токен и связанные данные из QSettings
+    QSettings settings("MyApp", "MyAppName");
+    settings.remove("userToken");
+    settings.remove("username");
+    settings.sync();
+
+    // Показываем сообщение об успешном выходе
+    QMessageBox::information(this, "Выход", "Вы успешно вышли из системы.");
+
+    // Закрываем текущее окно и открываем окно входа
+    this->close();
+    login *loginWindow = new login();
+    loginWindow->show();
+}
+
 
 void MainWindow::on_pushButton_4_clicked()
 {

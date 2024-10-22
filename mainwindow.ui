@@ -292,6 +292,19 @@ QPushButton:pressed {
      <string>форум</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="logoutButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>650</y>
+      <width>80</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Выход</string>
+    </property>
+   </widget>
    <zorder>courselabel</zorder>
    <zorder>menucoursebutton</zorder>
    <zorder>testframe</zorder>
@@ -306,6 +319,7 @@ QPushButton:pressed {
    <zorder>pushButton_4</zorder>
    <zorder>ProfileButton</zorder>
    <zorder>forumbutton</zorder>
+   <zorder>logoutButton</zorder>
   </widget>
  </widget>
  <resources/>
