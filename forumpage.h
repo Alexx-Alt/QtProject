@@ -49,6 +49,8 @@ private:
     void displaySelectedQuestion(int questionId);
 
     QString formatText(const QString &text);
+
+    void loadAnswers(int questionId);
 };
 
 #endif // FORUMPAGE_H

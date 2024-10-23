@@ -155,52 +155,131 @@ void ForumPage::on_addAnswerButton_clicked(int userId) {
         }
     }
 }
-// В forumpage.cpp добавьте:
 void ForumPage::displaySelectedQuestion(int questionId) {
+    QString displayText;  // Строка для формирования полного текста
     QSqlQuery query;
-    query.prepare("SELECT fq.text, u.username, fq.id "
+
+    // Сначала получаем информацию о вопросе
+    query.prepare("SELECT fq.text, u.username, fq.parent_id "
                   "FROM forum_question fq "
                   "JOIN users u ON fq.author_id = u.id "
                   "WHERE fq.id = ?");
     query.addBindValue(questionId);
 
     if (query.exec() && query.next()) {
-        QString questionText = query.value(0).toString();
-        QString authorName = query.value(1).toString();
+        int parentId = query.value(2).toInt();
 
-        // Применяем форматирование к тексту вопроса
-        QString formattedQuestion = formatText(questionText);
+        if (parentId == 0) {  // Если это вопрос
+            QString questionText = query.value(0).toString();
+            QString authorName = query.value(1).toString();
 
-        // Отображаем отформатированный вопрос в правой панели
-        ui->selectedQuestionTextEdit->setHtml("Вопрос от <b>" + authorName + "</b>:<br><br>" + formattedQuestion);
+            // Форматируем и добавляем вопрос
+            QString formattedQuestion = formatText(questionText);
+            displayText += "<h3>Вопрос от <b>" + authorName + "</b>:</h3>";
+            displayText += formattedQuestion;
+            displayText += "<br><br>";
+            displayText += "<h3>Ответы:</h3>";
 
-        // Делаем TextEdit только для чтения
-        ui->selectedQuestionTextEdit->setReadOnly(true);
+            // Получаем все ответы на этот вопрос
+            QSqlQuery answersQuery;
+            answersQuery.prepare("SELECT fq.text, u.username "
+                                 "FROM forum_question fq "
+                                 "JOIN users u ON fq.author_id = u.id "
+                                 "WHERE fq.parent_id = ? "
+                                 "ORDER BY fq.id");  // Сортировка по ID для хронологического порядка
+            answersQuery.addBindValue(questionId);
 
-        // Загружаем ответы
-        query.prepare("SELECT fq.text, u.username "
-                      "FROM forum_question fq "
-                      "JOIN users u ON fq.author_id = u.id "
-                      "WHERE fq.parent_id = ?");
-        query.addBindValue(questionId);
+            if (answersQuery.exec()) {
+                while (answersQuery.next()) {
+                    QString answerText = answersQuery.value(0).toString();
+                    QString answerAuthor = answersQuery.value(1).toString();
 
-        ui->answersListWidget->clear();
-        if (query.exec()) {
-            while (query.next()) {
-                QString answerText = query.value(0).toString();
-                QString answerAuthor = query.value(1).toString();
+                    // Форматируем и добавляем каждый ответ
+                    QString formattedAnswer = formatText(answerText);
+                    displayText += "<div style='margin-left: 20px; margin-bottom: 10px;'>";
+                    displayText += "<b>" + answerAuthor + "</b> ответил:<br>";
+                    displayText += formattedAnswer;
+                    displayText += "</div>";
+                }
+            }
+        } else {  // Если это ответ, получаем родительский вопрос
+            // Получаем информацию о родительском вопросе
+            QSqlQuery parentQuery;
+            parentQuery.prepare("SELECT fq.text, u.username "
+                                "FROM forum_question fq "
+                                "JOIN users u ON fq.author_id = u.id "
+                                "WHERE fq.id = ?");
+            parentQuery.addBindValue(parentId);
 
-                // Применяем форматирование к тексту ответа
-                QString formattedAnswer = formatText(answerText);
+            if (parentQuery.exec() && parentQuery.next()) {
+                QString questionText = parentQuery.value(0).toString();
+                QString questionAuthor = parentQuery.value(1).toString();
 
-                // Добавляем форматированный ответ в список
-                QListWidgetItem* item = new QListWidgetItem();
-                item->setData(Qt::DisplayRole, "Ответ от " + answerAuthor + ":\n" + answerText);
-                ui->answersListWidget->addItem(item);
+                // Форматируем и добавляем вопрос
+                QString formattedQuestion = formatText(questionText);
+                displayText += "<h3>Вопрос от <b>" + questionAuthor + "</b>:</h3>";
+                displayText += formattedQuestion;
+                displayText += "<br><br>";
+                displayText += "<h3>Ответы:</h3>";
 
+                // Получаем все ответы на этот вопрос
+                QSqlQuery answersQuery;
+                answersQuery.prepare("SELECT fq.text, u.username "
+                                     "FROM forum_question fq "
+                                     "JOIN users u ON fq.author_id = u.id "
+                                     "WHERE fq.parent_id = ? "
+                                     "ORDER BY fq.id");  // Сортировка по ID для хронологического порядка
+                answersQuery.addBindValue(parentId);
 
+                if (answersQuery.exec()) {
+                    while (answersQuery.next()) {
+                        QString answerText = answersQuery.value(0).toString();
+                        QString answerAuthor = answersQuery.value(1).toString();
+
+                        // Форматируем и добавляем каждый ответ
+                        QString formattedAnswer = formatText(answerText);
+                        displayText += "<div style='margin-left: 20px; margin-bottom: 10px;'>";
+                        displayText += "<b>" + answerAuthor + "</b> ответил:<br>";
+                        displayText += formattedAnswer;
+                        displayText += "</div>";
+                    }
+                }
             }
         }
+    }
+
+    // Выводим полный текст в TextEdit
+    ui->selectedQuestionTextEdit->setHtml(displayText);
+}
+void ForumPage::loadAnswers(int questionId) {
+    QSqlQuery query;
+    query.prepare("SELECT fq.text, u.username "
+                  "FROM forum_question fq "
+                  "JOIN users u ON fq.author_id = u.id "
+                  "WHERE fq.parent_id = ?");
+    query.addBindValue(questionId);
+
+    ui->answersListWidget->clear();
+    if (query.exec()) {
+        while (query.next()) {
+            QString answerText = query.value(0).toString();
+            QString answerAuthor = query.value(1).toString();
+
+            // Применяем форматирование к тексту ответа
+            QString formattedAnswer = formatText(answerText);
+
+            // Создаем и настраиваем элемент списка
+            QListWidgetItem* item = new QListWidgetItem;
+            item->setText("Ответ от " + answerAuthor + ":\n" + answerText);
+
+            // Можно добавить визуальное оформление для ответов
+            item->setBackground(Qt::white);
+
+            // Добавляем элемент в список ответов
+            ui->answersListWidget->addItem(item);
+        }
+    } else {
+        qDebug() << "Ошибка загрузки ответов:" << query.lastError().text();
     }
 }
 QString ForumPage::formatText(const QString &text) {
