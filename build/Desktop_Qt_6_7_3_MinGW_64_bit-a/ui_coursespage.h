@@ -14,6 +14,7 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QTableWidget>
+#include <QtWidgets/QTextEdit>
 
 QT_BEGIN_NAMESPACE
 
@@ -22,18 +23,22 @@ class Ui_CoursesPage
 public:
     QTableWidget *coursesTable;
     QTableWidget *lessonsTable;
+    QTextEdit *lessontextedit;
 
     void setupUi(QFrame *CoursesPage)
     {
         if (CoursesPage->objectName().isEmpty())
             CoursesPage->setObjectName("CoursesPage");
-        CoursesPage->resize(605, 589);
+        CoursesPage->resize(1298, 789);
         coursesTable = new QTableWidget(CoursesPage);
         coursesTable->setObjectName("coursesTable");
         coursesTable->setGeometry(QRect(140, 100, 441, 221));
         lessonsTable = new QTableWidget(CoursesPage);
         lessonsTable->setObjectName("lessonsTable");
         lessonsTable->setGeometry(QRect(110, 360, 481, 192));
+        lessontextedit = new QTextEdit(CoursesPage);
+        lessontextedit->setObjectName("lessontextedit");
+        lessontextedit->setGeometry(QRect(640, 360, 531, 351));
 
         retranslateUi(CoursesPage);
 

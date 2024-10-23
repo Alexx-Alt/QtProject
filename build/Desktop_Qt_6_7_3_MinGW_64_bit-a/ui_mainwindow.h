@@ -32,6 +32,8 @@ public:
     QLabel *upmenuHome;
     QFrame *testframe;
     QPushButton *pushButton;
+    QLabel *avatarLabel;
+    QPushButton *avatar;
     QLabel *courselabel;
     QPushButton *menucoursebutton;
     QLabel *upmenuTest;
@@ -122,6 +124,12 @@ public:
         pushButton = new QPushButton(testframe);
         pushButton->setObjectName("pushButton");
         pushButton->setGeometry(QRect(200, 120, 80, 24));
+        avatarLabel = new QLabel(testframe);
+        avatarLabel->setObjectName("avatarLabel");
+        avatarLabel->setGeometry(QRect(360, 90, 211, 101));
+        avatar = new QPushButton(testframe);
+        avatar->setObjectName("avatar");
+        avatar->setGeometry(QRect(100, 200, 80, 22));
         courselabel = new QLabel(centralwidget);
         courselabel->setObjectName("courselabel");
         courselabel->setGeometry(QRect(30, 330, 41, 41));
@@ -193,6 +201,8 @@ public:
         menutestbutton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
         upmenuHome->setText(QCoreApplication::translate("MainWindow", "\320\223\320\273\320\260\320\262\320\275\320\260\321\217", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+        avatarLabel->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
+        avatar->setText(QCoreApplication::translate("MainWindow", "\320\260\320\262\320\260\321\202\320\260\321\200\320\272\320\260", nullptr));
         courselabel->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
         menucoursebutton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
         upmenuTest->setText(QCoreApplication::translate("MainWindow", "\320\242\320\265\321\201\321\202\321\213", nullptr));

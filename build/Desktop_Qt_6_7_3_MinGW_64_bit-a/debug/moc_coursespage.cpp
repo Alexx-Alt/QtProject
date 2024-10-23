@@ -39,7 +39,9 @@ constexpr auto qt_meta_stringdata_CLASSCoursesPageENDCLASS = QtMocHelpers::strin
     "onCourseSelected",
     "",
     "row",
-    "column"
+    "onLessonSelected",
+    "formatText",
+    "text"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -52,7 +54,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSCoursesPageENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -60,10 +62,14 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSCoursesPageENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    2,   20,    2, 0x08,    1 /* Private */,
+       1,    1,   32,    2, 0x08,    1 /* Private */,
+       4,    1,   35,    2, 0x08,    3 /* Private */,
+       5,    1,   38,    2, 0x08,    5 /* Private */,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::Int, QMetaType::Int,    3,    4,
+    QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::Void, QMetaType::Int,    3,
+    QMetaType::QString, QMetaType::QString,    6,
 
        0        // eod
 };
@@ -80,7 +86,12 @@ Q_CONSTINIT const QMetaObject CoursesPage::staticMetaObject = { {
         // method 'onCourseSelected'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<int, std::false_type>,
-        QtPrivate::TypeAndForceComplete<int, std::false_type>
+        // method 'onLessonSelected'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>,
+        // method 'formatText'
+        QtPrivate::TypeAndForceComplete<QString, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>
     >,
     nullptr
 } };
@@ -91,7 +102,10 @@ void CoursesPage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         auto *_t = static_cast<CoursesPage *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->onCourseSelected((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2]))); break;
+        case 0: _t->onCourseSelected((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 1: _t->onLessonSelected((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 2: { QString _r = _t->formatText((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
     }
@@ -116,13 +130,13 @@ int CoursesPage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 3)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 3;
     }
     return _id;
 }

@@ -27,8 +27,13 @@ private:
 
     int getUserIdByUsername(const QString &username);
 
+
+
 private slots:
-    void onCourseSelected(int row, int column); // Обработка клика по курсу
+    void onCourseSelected(int row); // Обработка клика по курсу
+
+    void onLessonSelected(int row);
+    QString formatText(const QString &text);
 
 
 };

@@ -7,16 +7,29 @@
 
 #include <QSettings>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
+#include <QFile>
+#include <QObject>
+#include <QFileDialog>
+#include <QFile>
+#include <QSqlError>
 
 MainWindow::MainWindow(const QString &username, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), currentUserName(username), mainpage(nullptr), testpage(nullptr), uiSetup(ui), profile(nullptr), coursepage(nullptr), forumpage(nullptr)
+    , ui(new Ui::MainWindow), currentUserName(username), mainpage(nullptr), testpage(nullptr), uiSetup(ui), profile(nullptr), coursepage(nullptr), forumpage(nullptr), manager(new QNetworkAccessManager(this))
 {
     ui->setupUi(this);
     //размер окна
     setFixedSize(1800, 1000);
 
     uiSetup.setUpUi();
+    QString username2 = username;
+    int userId = getUserIdByUsername(currentUserName);
+    avatr(userId);
+
 }
 
 MainWindow::~MainWindow()
@@ -148,3 +161,50 @@ void MainWindow::showforum(){
 
 }
 
+void MainWindow::avatr(int userId){
+
+    // Получение пути к аватарке из базы данных
+    QSqlQuery query;
+    query.prepare("SELECT pathtoavatr FROM avatars WHERE user_id = :userId");
+    query.bindValue(":userId", userId);
+
+    if (query.exec() && query.next()) {
+        QString avatarPath = query.value(0).toString();
+
+
+
+        // Создание запроса
+        QNetworkRequest request(avatarPath);
+        QNetworkReply* reply = manager->get(request);
+        // Обрабатываем завершение запроса
+        connect(reply, &QNetworkReply::finished, [reply, this]() {
+            if (reply->error() == QNetworkReply::NoError) {
+                QByteArray avatarData = reply->readAll();
+                QPixmap pixmap;
+                pixmap.loadFromData(avatarData); // Загружаем изображение из данных
+
+                // Устанавливаем QPixmap в QLabel
+                ui->avatarLabel->setPixmap(pixmap.scaled(ui->avatarLabel->size(), Qt::KeepAspectRatio)); // Масштабируем изображение
+                qDebug() << "Avatar downloaded and displayed.";
+            } else {
+                qDebug() << "Error downloading avatar:" << reply->errorString();
+            }
+            reply->deleteLater(); // Освобождаем reply
+        });
+    } else {
+        QMessageBox::warning(this, "Ошибка", "Не удалось найти аватарку для пользователя.");
+    }
+
+}
+int MainWindow::getUserIdByUsername(const QString &username) {
+    QSqlQuery query;
+    query.prepare("SELECT id FROM users WHERE username = ?"); // Предполагается, что имя пользователя хранится в поле username
+    query.addBindValue(username);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt(); // Возвращаем ID пользователя
+    } else {
+        qDebug() << "Ошибка получения ID пользователя:" << query.lastError().text();
+        return -1; // Возвращаем -1 в случае ошибки или если пользователь не найден
+    }
+}

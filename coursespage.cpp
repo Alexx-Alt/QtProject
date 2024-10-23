@@ -15,6 +15,8 @@ CoursesPage::CoursesPage(const QString &username, QWidget *parent)
      connect(ui->coursesTable, &QTableWidget::cellClicked, this, &CoursesPage::onCourseSelected);
     int userId = getUserIdByUsername(currentUserName);
       loadCourses(userId);
+    connect(ui->lessonsTable, &QTableWidget::cellClicked, this, &CoursesPage::onLessonSelected);
+
 }
 
 CoursesPage::~CoursesPage()
@@ -71,7 +73,8 @@ void CoursesPage::loadCourses(int userId)
 void CoursesPage::loadLessons(int courseId)
 {
     QSqlQuery query;
-    query.prepare("SELECT title, content FROM lessons WHERE course_id = ?");
+    // Выбираем также ID урока
+    query.prepare("SELECT id, title, content FROM lessons WHERE course_id = ?");
     query.addBindValue(courseId);
 
     if (!query.exec()) {
@@ -81,31 +84,36 @@ void CoursesPage::loadLessons(int courseId)
 
     // Очищаем таблицу уроков
     ui->lessonsTable->setRowCount(0);
-    ui->lessonsTable->setColumnCount(2); // Указываем 2 столбца для таблицы курсов
+    ui->lessonsTable->setColumnCount(2); // Указываем 2 столбца для таблицы уроков
     ui->lessonsTable->setHorizontalHeaderLabels(QStringList() << "Название урока" << "Описание урока");
+
     int row = 0;
 
     // Заполняем таблицу уроков
     while (query.next()) {
-        QString lessonTitle = query.value(0).toString();
-        QString lessoncontent = query.value(1).toString();
+        int lessonId = query.value(0).toInt();  // Получаем ID урока
+        QString lessonTitle = query.value(1).toString();
+        QString lessonContent = query.value(2).toString();
 
         ui->lessonsTable->insertRow(row);
-        ui->lessonsTable->setItem(row, 0, new QTableWidgetItem(lessonTitle));
-        ui->lessonsTable->setItem(row, 1, new QTableWidgetItem(lessoncontent));
+
+        // Создаем элемент для названия урока и сохраняем в нем ID урока
+        QTableWidgetItem *titleItem = new QTableWidgetItem(lessonTitle);
+        titleItem->setData(Qt::UserRole, lessonId);  // Сохраняем ID урока в элементе
+        ui->lessonsTable->setItem(row, 0, titleItem);
+
+        // Добавляем описание урока
+        ui->lessonsTable->setItem(row, 1, new QTableWidgetItem(lessonContent));
+
         row++;
     }
+
     // Автоматическая подгонка столбцов под содержимое
     ui->lessonsTable->resizeColumnsToContents();
-    // Автоматическая подгонка строк под содержимое
-    ui->lessonsTable->resizeRowsToContents();
-    // Автоматическая подгонка столбцов под содержимое
-    ui->lessonsTable->resizeColumnsToContents();
-    // Автоматическая подгонка строк под содержимое
     ui->lessonsTable->resizeRowsToContents();
 }
 
-void CoursesPage::onCourseSelected(int row, int column)
+void CoursesPage::onCourseSelected(int row)
 {
     // Получаем ID курса из выбранной строки
     int courseId = ui->coursesTable->item(row, 0)->data(Qt::UserRole).toInt();
@@ -126,5 +134,60 @@ int CoursesPage::getUserIdByUsername(const QString &username) {
         qDebug() << "Ошибка получения ID пользователя:" << query.lastError().text();
         return -1; // Возвращаем -1 в случае ошибки или если пользователь не найден
     }
+}
+void CoursesPage::onLessonSelected(int row)
+{
+    ui->lessontextedit->setReadOnly(true);
+     QString displayText;
+    // Получаем ID урока из выбранной строки
+    int lessonId = ui->lessonsTable->item(row, 0)->data(Qt::UserRole).toInt();
+
+    qDebug() << "Выбранный урок ID:" << lessonId;
+    QSqlQuery query;
+    // Выбираем также ID урока
+    query.prepare("SELECT title, contentles FROM lessons WHERE id = ?");
+    query.addBindValue(lessonId);
+    if(query.exec()){
+        while (query.next()){
+        QString title = query.value(0).toString();
+        QString lessonText = query.value(1).toString();
+        // Предположим, что у вас есть путь к изображению, который вы хотите вставить
+        QString imagePath = ":/img/house.png"; // Замените на реальный путь к изображению
+
+
+        QString formattedLesson = formatText(lessonText);
+        displayText += "урок: <b>" + title + "</b>" + "<br>";
+        displayText += formattedLesson;
+        ui->lessontextedit->setHtml(displayText);
+        }
+    }
+    else{
+        qDebug() << "ошибка" << query.lastError();
+    }
+
+}
+QString CoursesPage::formatText(const QString &text) {
+    QString formattedText = text;
+
+    // Жирный текст (**текст**)
+    QRegularExpression boldRegex("\\*\\*(.*?)\\*\\*");
+    formattedText.replace(boldRegex, "<b>\\1</b>");
+
+    // Курсив (*текст*)
+    QRegularExpression italicRegex("\\*(.*?)\\*");
+    formattedText.replace(italicRegex, "<i>\\1</i>");
+
+    // Подчеркнутый текст (__текст__)
+    QRegularExpression underlineRegex("__(.*?)__");
+    formattedText.replace(underlineRegex, "<u>\\1</u>");
+
+    // Зачеркнутый текст (~~текст~~)
+    QRegularExpression strikeRegex("~~(.*?)~~");
+    formattedText.replace(strikeRegex, "<s>\\1</s>");
+
+    // Замена переносов строк на HTML-переносы
+    formattedText.replace("\n", "<br>");
+
+    return formattedText;
 }
 

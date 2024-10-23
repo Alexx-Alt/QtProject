@@ -9,6 +9,14 @@
 #include "coursespage.h"
 #include "forumpage.h"
 
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
+#include <QFile>
+#include <QDebug>
+#include <QObject>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -52,6 +60,12 @@ private slots:
 
     void on_logoutButton_clicked();
 
+    int getUserIdByUsername(const QString &username);
+
+    void avatr(int userId);
+
+
+
 
 
 
@@ -64,5 +78,6 @@ private:
     Profile *profile;
     CoursesPage *coursepage;
     ForumPage *forumpage;
+    QNetworkAccessManager* manager;
 };
 #endif // MAINWINDOW_H
