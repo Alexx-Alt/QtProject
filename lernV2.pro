@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp \
     profile.cpp \
     teachermainwindow.cpp \
+    teasherstudentframe.cpp \
     testframe.cpp \
     uisetup.cpp \
     userprofiledialog.cpp
@@ -34,6 +35,7 @@ HEADERS += \
     mainwindow.h \
     profile.h \
     teachermainwindow.h \
+    teasherstudentframe.h \
     testframe.h \
     uisetup.h \
     userprofiledialog.h
@@ -46,6 +48,7 @@ FORMS += \
     mainwindow.ui \
     profile.ui \
     teachermainwindow.ui \
+    teasherstudentframe.ui \
     testframe.ui \
     userprofiledialog.ui
 
