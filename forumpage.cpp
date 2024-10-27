@@ -1,5 +1,6 @@
 #include "forumpage.h"
 #include "ui_forumpage.h"
+#include "userprofiledialog.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -88,18 +89,15 @@ void ForumPage::displayForumQuestion(const ForumQuestion &question) {
     QListWidgetItem *item = new QListWidgetItem;
 
     if (question.parent_id == 0) {
-        // Основной вопрос
         item->setText("Вопрос: " + question.text + "\nАвтор: " + question.author_name);
     } else {
-        // Ответ на вопрос
         item->setText("  Ответ: " + question.text + "\nАвтор: " + question.author_name);
         item->setBackground(Qt::white);
     }
 
-    // Устанавливаем ID вопроса в UserRole
-    item->setData(Qt::UserRole, question.id);
+    item->setData(Qt::UserRole, question.id);              // ID вопроса
+    item->setData(Qt::UserRole + 1, question.author_name); // Имя автора
 
-    // Добавляем элемент в список вопросов
     ui->forumListWidget->addItem(item);
 }
 // Добавление нового вопроса
@@ -307,6 +305,62 @@ QString ForumPage::formatText(const QString &text) {
     return formattedText;
 }
 
+void ForumPage::on_showUserProfile_clicked()
+{
 
+    QListWidgetItem *selectedItem = ui->forumListWidget->currentItem();
+    QString name = selectedItem->data(Qt::UserRole + 1).toString();
+    QSqlQuery query;
 
+    // Получение email пользователя
+    query.prepare("SELECT email FROM users WHERE username = ?");
+    query.addBindValue(name);
+    QString email;
+    if (query.exec() && query.next()) {
+        email = query.value(0).toString();
+    } else {
+        qDebug() << "Ошибка загрузки профиля:" << query.lastError().text();
+        return;
+    }
+
+    QSqlQuery queryCourses;
+    queryCourses.prepare("SELECT COUNT(DISTINCT course_id) AS completed_courses FROM user_progress WHERE user_id = (SELECT id FROM users WHERE username = ?) AND completed = TRUE;");
+    queryCourses.addBindValue(name);
+    int completedCourses = 0;
+    if (queryCourses.exec() && queryCourses.next()) {
+        completedCourses = queryCourses.value(0).toInt();
+
+    } else {
+        qDebug() << "Ошибка получения количества пройденных курсов:" << queryCourses.lastError().text();
+    }
+
+    // Получение количества пройденных уроков
+    QSqlQuery queryLessons;
+    queryLessons.prepare("SELECT COUNT(DISTINCT lesson_id) AS completed_lessons FROM user_progress WHERE user_id = (SELECT id FROM users WHERE username = ?) AND completed = TRUE;");
+    queryLessons.addBindValue(name);
+    int completedLessons = 0;
+    if (queryLessons.exec() && queryLessons.next()) {
+        completedLessons = queryLessons.value(0).toInt();
+
+    } else {
+        qDebug() << "Ошибка получения количества пройденных уроков:" << queryLessons.lastError().text();
+    }
+
+    // Получение количества пройденных тестов
+    QSqlQuery testquery;
+    testquery.prepare("SELECT test_count FROM test_results WHERE user_id = (SELECT id FROM users WHERE username = ?)");
+    testquery.addBindValue(name);
+    int completedTests = 0;
+    if (testquery.exec() && testquery.next()) {
+        completedTests = testquery.value(0).toInt();
+
+    } else {
+        qDebug() << "Ошибка получения количества пройденных тестов:" << query.lastError().text();
+    }
+
+    // Отображение профиля в новом окне
+    UserProfileDialog profileDialog(this);
+    profileDialog.setProfileInfo(name, email, completedCourses, completedLessons, completedTests);
+    profileDialog.exec();
+}
 

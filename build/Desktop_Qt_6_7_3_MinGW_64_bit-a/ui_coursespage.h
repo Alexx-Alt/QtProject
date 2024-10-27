@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTextEdit>
 
@@ -24,12 +25,13 @@ public:
     QTableWidget *coursesTable;
     QTableWidget *lessonsTable;
     QTextEdit *lessontextedit;
+    QPushButton *completeLessonButton;
 
     void setupUi(QFrame *CoursesPage)
     {
         if (CoursesPage->objectName().isEmpty())
             CoursesPage->setObjectName("CoursesPage");
-        CoursesPage->resize(1298, 789);
+        CoursesPage->resize(1436, 789);
         coursesTable = new QTableWidget(CoursesPage);
         coursesTable->setObjectName("coursesTable");
         coursesTable->setGeometry(QRect(140, 100, 441, 221));
@@ -39,6 +41,9 @@ public:
         lessontextedit = new QTextEdit(CoursesPage);
         lessontextedit->setObjectName("lessontextedit");
         lessontextedit->setGeometry(QRect(640, 360, 531, 351));
+        completeLessonButton = new QPushButton(CoursesPage);
+        completeLessonButton->setObjectName("completeLessonButton");
+        completeLessonButton->setGeometry(QRect(1230, 600, 131, 41));
 
         retranslateUi(CoursesPage);
 
@@ -48,6 +53,7 @@ public:
     void retranslateUi(QFrame *CoursesPage)
     {
         CoursesPage->setWindowTitle(QCoreApplication::translate("CoursesPage", "Frame", nullptr));
+        completeLessonButton->setText(QCoreApplication::translate("CoursesPage", "\320\227\320\260\320\262\320\265\321\200\321\210\320\270\321\202\321\214 \321\203\321\200\320\276\320\272", nullptr));
     } // retranslateUi
 
 };

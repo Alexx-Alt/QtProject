@@ -19,8 +19,10 @@ SOURCES += \
     mainpage.cpp \
     mainwindow.cpp \
     profile.cpp \
+    teachermainwindow.cpp \
     testframe.cpp \
-    uisetup.cpp
+    uisetup.cpp \
+    userprofiledialog.cpp
 
 HEADERS += \
     coursespage.h \
@@ -31,8 +33,10 @@ HEADERS += \
     mainpage.h \
     mainwindow.h \
     profile.h \
+    teachermainwindow.h \
     testframe.h \
-    uisetup.h
+    uisetup.h \
+    userprofiledialog.h
 
 FORMS += \
     coursespage.ui \
@@ -41,7 +45,9 @@ FORMS += \
     mainpage.ui \
     mainwindow.ui \
     profile.ui \
-    testframe.ui
+    teachermainwindow.ui \
+    testframe.ui \
+    userprofiledialog.ui
 
 
 # Default rules for deployment.

@@ -19,6 +19,7 @@ class login : public QWidget
 public:
     explicit login(QWidget *parent = nullptr);
     ~login();
+    void loadInterfaceForRole(const QString &username);
 
 private slots:
     void on_LoginButton_clicked();
@@ -39,6 +40,9 @@ private:
     QString generateJwtToken(const QString &username, const QString &secretKey);
     void saveToken(const QString &token);
     QString usernameCons;
+
+
+    int getUserRole(const QString &username);
 
 };
 

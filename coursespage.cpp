@@ -166,6 +166,7 @@ void CoursesPage::onLessonSelected(int row)
     }
 
 }
+//функция форматирования текста
 QString CoursesPage::formatText(const QString &text) {
     QString formattedText = text;
 
@@ -189,5 +190,50 @@ QString CoursesPage::formatText(const QString &text) {
     formattedText.replace("\n", "<br>");
 
     return formattedText;
+}
+
+void CoursesPage::markLessonAsCompleted(int lessonId, int courseId) {
+    int userId = getUserIdByUsername(currentUserName);
+
+    // Проверяем, существует ли запись для данного урока и пользователя
+    QSqlQuery checkQuery;
+    checkQuery.prepare("SELECT COUNT(*) FROM user_progress WHERE user_id = ? AND lesson_id = ?");
+    checkQuery.addBindValue(userId);
+    checkQuery.addBindValue(lessonId);
+
+    if (checkQuery.exec() && checkQuery.next() && checkQuery.value(0).toInt() == 0) {
+        // Если записи нет, вставляем новую запись
+        QSqlQuery insertQuery;
+        insertQuery.prepare("INSERT INTO user_progress (user_id, lesson_id, completed, course_id, completed_at) "
+                            "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+        insertQuery.addBindValue(userId);
+        insertQuery.addBindValue(lessonId);
+        insertQuery.addBindValue(1);  // Устанавливаем `completed` как true
+        insertQuery.addBindValue(courseId);
+
+        if (!insertQuery.exec()) {
+            QMessageBox::warning(this, "Ошибка", "Ошибка записи выполнения урока: " + insertQuery.lastError().text());
+        } else {
+            qDebug() << "Урок с ID " << lessonId << " завершен";
+
+        }
+    } else {
+        QMessageBox::information(this, "Информация", "Этот урок уже был завершен.");
+    }
+}
+
+void CoursesPage::on_completeLessonButton_clicked()
+{
+    int row = ui->lessonsTable->currentRow();
+    if (row < 0) {
+        QMessageBox::warning(this, "Ошибка", "Пожалуйста, выберите урок для завершения.");
+        return;
+    }
+
+    int lessonId = ui->lessonsTable->item(row, 0)->data(Qt::UserRole).toInt();
+    int courseId = ui->coursesTable->item(ui->coursesTable->currentRow(), 0)->data(Qt::UserRole).toInt();
+
+    markLessonAsCompleted(lessonId, courseId);
+
 }
 

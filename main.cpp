@@ -2,6 +2,7 @@
 #include "database.h"
 #include "login.h"
 #include "jwt.h"
+#include "teachermainwindow.h"
 
 
 #include <QApplication>
@@ -37,12 +38,28 @@ QString getUserSecretKey(const QString &username) {
         return QString();
     }
 }
+QString base64UrlDecode(const QString &base64Url) {
+    // Заменяем '-' на '+' и '_' на '/'
+    QString base64 = base64Url;
+    base64.replace('-', '+');
+    base64.replace('_', '/');
+
+    // Добавляем необходимое количество символов '=' для выравнивания
+    while (base64.length() % 4 != 0) {
+        base64.append('=');
+    }
+
+    return base64;
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+
     // Создание объекта Database и подключение к базе данных
     Database db("127.0.0.1", 3306, "lern", "root", "Pocket_2564");
+
 
     if (!db.open()) {
         QMessageBox::critical(nullptr, "Ошибка", "Не удалось подключиться к базе данных.");
@@ -54,6 +71,7 @@ int main(int argc, char *argv[])
     QString username;
 
     if (!storedToken.isEmpty()) {
+
         try {
             // Разделяем токен на части
             QStringList tokenParts = storedToken.split('.');
@@ -61,9 +79,9 @@ int main(int argc, char *argv[])
                 throw std::runtime_error("Неверный формат токена");
             }
 
-            // Декодируем заголовок и полезную нагрузку
-            QByteArray headerJson = QByteArray::fromBase64(tokenParts[0].toUtf8());
-            QByteArray payloadJson = QByteArray::fromBase64(tokenParts[1].toUtf8());
+            // Декодируем заголовок и полезную нагрузку с учетом Base64Url
+            QByteArray headerJson = QByteArray::fromBase64(base64UrlDecode(tokenParts[0]).toUtf8());
+            QByteArray payloadJson = QByteArray::fromBase64(base64UrlDecode(tokenParts[1]).toUtf8());
 
             QJsonDocument headerDoc = QJsonDocument::fromJson(headerJson);
             QJsonDocument payloadDoc = QJsonDocument::fromJson(payloadJson);
@@ -74,6 +92,7 @@ int main(int argc, char *argv[])
 
             QJsonObject payload = payloadDoc.object();
             username = payload["username"].toString();
+
 
             if (username.isEmpty()) {
                 throw std::runtime_error("Токен не содержит имя пользователя");
@@ -93,19 +112,28 @@ int main(int argc, char *argv[])
                 throw std::runtime_error("Токен истек");
             }
 
+
+
             // Токен действителен, открываем главное окно
-            MainWindow *mainWindow = new MainWindow(username);
-            mainWindow->show();
+            login loginInterface;
+            loginInterface.loadInterfaceForRole(username);
+            qDebug() << username;
+            // MainWindow *mainWindow = new MainWindow(username);
+            // mainWindow->show();
             return a.exec();
 
         } catch (const std::exception& e) {
             qDebug() << "Ошибка при проверке токена:" << e.what();
+            qDebug() << "Проверка токена для пользователя:" << username;
+
+
             // Очищаем недействительный токен
             settings.remove("userToken");
         }
     }
 
     // Если токен недействителен, отсутствует или произошла ошибка, показываем окно входа
+    qDebug() << "Проверка токена для пользователя:" << username;
     login l;
     l.show();
 

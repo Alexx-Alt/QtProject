@@ -35,7 +35,9 @@ private slots:
     void onLessonSelected(int row);
     QString formatText(const QString &text);
 
+    void markLessonAsCompleted(int lessonId, int courseId);
 
+    void on_completeLessonButton_clicked();
 };
 
 #endif // COURSESPAGE_H

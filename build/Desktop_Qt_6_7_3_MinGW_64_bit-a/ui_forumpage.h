@@ -28,6 +28,7 @@ public:
     QTextEdit *newAnswerTextEdit;
     QTextEdit *selectedQuestionTextEdit;
     QListWidget *answersListWidget;
+    QPushButton *showUserProfile;
 
     void setupUi(QFrame *ForumPage)
     {
@@ -55,6 +56,9 @@ public:
         answersListWidget = new QListWidget(ForumPage);
         answersListWidget->setObjectName("answersListWidget");
         answersListWidget->setGeometry(QRect(900, 630, 256, 192));
+        showUserProfile = new QPushButton(ForumPage);
+        showUserProfile->setObjectName("showUserProfile");
+        showUserProfile->setGeometry(QRect(1180, 640, 131, 24));
 
         retranslateUi(ForumPage);
 
@@ -66,6 +70,7 @@ public:
         ForumPage->setWindowTitle(QCoreApplication::translate("ForumPage", "Frame", nullptr));
         addQuestionButton->setText(QCoreApplication::translate("ForumPage", "\320\262\320\276\320\277\321\200\320\276\321\201", nullptr));
         addAnswerButton->setText(QCoreApplication::translate("ForumPage", "\320\276\321\202\320\262\320\265\321\202", nullptr));
+        showUserProfile->setText(QCoreApplication::translate("ForumPage", "\320\237\321\200\320\276\321\201\320\274\320\276\321\202\321\200 \320\277\321\200\320\276\321\204\320\270\320\273\321\217", nullptr));
     } // retranslateUi
 
 };

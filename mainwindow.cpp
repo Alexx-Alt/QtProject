@@ -170,9 +170,6 @@ void MainWindow::avatr(int userId){
 
     if (query.exec() && query.next()) {
         QString avatarPath = query.value(0).toString();
-
-
-
         // Создание запроса
         QNetworkRequest request(avatarPath);
         QNetworkReply* reply = manager->get(request);

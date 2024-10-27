@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -21,6 +22,8 @@ class Ui_Profile
 public:
     QLabel *userlabel;
     QLabel *tegslabel;
+    QLabel *avatarLabel;
+    QPushButton *uploadavatar;
 
     void setupUi(QFrame *Profile)
     {
@@ -34,6 +37,12 @@ public:
         tegslabel = new QLabel(Profile);
         tegslabel->setObjectName("tegslabel");
         tegslabel->setGeometry(QRect(130, 220, 481, 121));
+        avatarLabel = new QLabel(Profile);
+        avatarLabel->setObjectName("avatarLabel");
+        avatarLabel->setGeometry(QRect(370, 100, 111, 101));
+        uploadavatar = new QPushButton(Profile);
+        uploadavatar->setObjectName("uploadavatar");
+        uploadavatar->setGeometry(QRect(440, 440, 80, 24));
 
         retranslateUi(Profile);
 
@@ -45,6 +54,8 @@ public:
         Profile->setWindowTitle(QCoreApplication::translate("Profile", "Frame", nullptr));
         userlabel->setText(QCoreApplication::translate("Profile", "TextLabel", nullptr));
         tegslabel->setText(QCoreApplication::translate("Profile", "TextLabel", nullptr));
+        avatarLabel->setText(QCoreApplication::translate("Profile", "TextLabel", nullptr));
+        uploadavatar->setText(QCoreApplication::translate("Profile", "\320\241\320\274\320\265\320\275\320\260 \320\260\320\262\321\213", nullptr));
     } // retranslateUi
 
 };

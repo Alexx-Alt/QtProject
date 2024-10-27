@@ -2,6 +2,7 @@
 #include "ui_login.h"
 #include "mainwindow.h"
 #include "jwt.h"
+#include "teachermainwindow.h"
 
 
 #include <QCryptographicHash>
@@ -97,8 +98,7 @@ void login::on_LoginButton_clicked()
 
             QMessageBox::information(this, "Успех", "Вы успешно вошли в систему!");
 
-            auto *mainWindow = new MainWindow(username);
-            mainWindow->show();
+            loadInterfaceForRole(username);
             close();
         } else {
             showWarning("Неверный пароль.");
@@ -220,4 +220,45 @@ bool login::isUsernameUnique(const QString &username)
         return false;
     }
     return query.value(0).toInt() == 0; // Если 0, значит имя пользователя уникально
+}
+void login::loadInterfaceForRole(const QString &username) {
+
+    int roleId = getUserRole(username);
+    MainWindow *mainWindow = nullptr; // Объявляем переменную здесь
+    TeacherMainWindow *teachermainWindow = nullptr; // Объявляем переменную здесь
+
+    switch (roleId) {
+    case 2: // Студент
+        mainWindow = new MainWindow(username);
+        break;
+    case 1: // Учитель
+         //mainWindow = new MainWindow(username);
+        teachermainWindow = new TeacherMainWindow(/*username*/);
+        break;
+    default:
+
+        QMessageBox::warning(this, "Ошибка", "Неизвестная роль пользователя. Пожалуйста, обратитесь к администратору.");
+        break;
+    }
+    // Используйте mainWindow после switch, если это необходимо
+    if (mainWindow) {
+        mainWindow->show();
+         // Пример: скрываем текущее окно (если это необходимо)
+    }
+    else if(teachermainWindow){
+        teachermainWindow->show();
+    }
+}
+int login::getUserRole(const QString &username) {
+    const QString username2 = username;
+    QSqlQuery query;
+    query.prepare("SELECT role FROM users WHERE username = ?");
+    query.addBindValue(username);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt(); // Возвращаем роль пользователя
+    } else {
+        qDebug() << "Ошибка получения роли пользователя:" << query.lastError().text();
+        return -1; // Возвращаем -1 в случае ошибки
+    }
 }

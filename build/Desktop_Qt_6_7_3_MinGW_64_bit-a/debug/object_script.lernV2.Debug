@@ -7,8 +7,10 @@ debug/main.o
 debug/mainpage.o
 debug/mainwindow.o
 debug/profile.o
+debug/teachermainwindow.o
 debug/testframe.o
 debug/uisetup.o
+debug/userprofiledialog.o
 debug/qrc_Scr.o
 debug/moc_coursespage.o
 debug/moc_forumpage.o
@@ -16,4 +18,6 @@ debug/moc_login.o
 debug/moc_mainpage.o
 debug/moc_mainwindow.o
 debug/moc_profile.o
+debug/moc_teachermainwindow.o
 debug/moc_testframe.o
+debug/moc_userprofiledialog.o

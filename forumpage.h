@@ -21,6 +21,8 @@ private slots:
     void on_addAnswerButton_clicked(int userId);
 
 
+    void on_showUserProfile_clicked();
+
 private:
     Ui::ForumPage *ui;
 

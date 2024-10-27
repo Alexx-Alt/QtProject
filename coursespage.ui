@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1298</width>
+    <width>1436</width>
     <height>789</height>
    </rect>
   </property>
@@ -41,6 +41,19 @@
      <width>531</width>
      <height>351</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="completeLessonButton">
+   <property name="geometry">
+    <rect>
+     <x>1230</x>
+     <y>600</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Завершить урок</string>
    </property>
   </widget>
  </widget>
