@@ -7,7 +7,9 @@ release/main.o
 release/mainpage.o
 release/mainwindow.o
 release/profile.o
+release/studentprosmotr.o
 release/teachermainwindow.o
+release/teasherstudentframe.o
 release/testframe.o
 release/uisetup.o
 release/userprofiledialog.o
@@ -18,6 +20,8 @@ release/moc_login.o
 release/moc_mainpage.o
 release/moc_mainwindow.o
 release/moc_profile.o
+release/moc_studentprosmotr.o
 release/moc_teachermainwindow.o
+release/moc_teasherstudentframe.o
 release/moc_testframe.o
 release/moc_userprofiledialog.o

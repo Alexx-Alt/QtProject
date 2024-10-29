@@ -19,6 +19,7 @@ SOURCES += \
     mainpage.cpp \
     mainwindow.cpp \
     profile.cpp \
+    studentprosmotr.cpp \
     teachermainwindow.cpp \
     teasherstudentframe.cpp \
     testframe.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     mainpage.h \
     mainwindow.h \
     profile.h \
+    studentprosmotr.h \
     teachermainwindow.h \
     teasherstudentframe.h \
     testframe.h \
@@ -47,6 +49,7 @@ FORMS += \
     mainpage.ui \
     mainwindow.ui \
     profile.ui \
+    studentprosmotr.ui \
     teachermainwindow.ui \
     teasherstudentframe.ui \
     testframe.ui \

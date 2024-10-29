@@ -2,6 +2,7 @@
 #define TEACHERMAINWINDOW_H
 
 #include <QMainWindow>
+#include "studentprosmotr.h"
 
 namespace Ui {
 class TeacherMainWindow;
@@ -15,8 +16,13 @@ public:
     explicit TeacherMainWindow(QWidget *parent = nullptr);
     ~TeacherMainWindow();
 
+private slots:
+    void on_studentbutton_clicked();
+
 private:
     Ui::TeacherMainWindow *ui;
+    StudentProsmotr *studentprosmotr;
+    void showstudent();
 };
 
 #endif // TEACHERMAINWINDOW_H

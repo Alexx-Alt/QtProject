@@ -11,7 +11,9 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -22,6 +24,10 @@ public:
     QWidget *centralwidget;
     QWidget *widget;
     QWidget *widget_2;
+    QPushButton *studentbutton;
+    QPushButton *pushButton_2;
+    QPushButton *pushButton_3;
+    QLabel *label;
 
     void setupUi(QMainWindow *TeacherMainWindow)
     {
@@ -39,6 +45,20 @@ public:
         widget_2->setObjectName("widget_2");
         widget_2->setGeometry(QRect(100, 70, 1731, 20));
         widget_2->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
+        studentbutton = new QPushButton(centralwidget);
+        studentbutton->setObjectName("studentbutton");
+        studentbutton->setGeometry(QRect(20, 130, 61, 51));
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName("pushButton_2");
+        pushButton_2->setGeometry(QRect(20, 200, 61, 51));
+        pushButton_3 = new QPushButton(centralwidget);
+        pushButton_3->setObjectName("pushButton_3");
+        pushButton_3->setGeometry(QRect(20, 260, 61, 51));
+        label = new QLabel(centralwidget);
+        label->setObjectName("label");
+        label->setGeometry(QRect(240, 160, 151, 81));
+        label->setStyleSheet(QString::fromUtf8("font: 14pt \"Segoe UI\";\n"
+"background-color: rgb(255, 255, 255);"));
         TeacherMainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(TeacherMainWindow);
@@ -49,6 +69,10 @@ public:
     void retranslateUi(QMainWindow *TeacherMainWindow)
     {
         TeacherMainWindow->setWindowTitle(QCoreApplication::translate("TeacherMainWindow", "MainWindow", nullptr));
+        studentbutton->setText(QCoreApplication::translate("TeacherMainWindow", "PushButton", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("TeacherMainWindow", "PushButton", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("TeacherMainWindow", "PushButton", nullptr));
+        label->setText(QCoreApplication::translate("TeacherMainWindow", "TextLabel", nullptr));
     } // retranslateUi
 
 };
