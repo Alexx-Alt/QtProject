@@ -30,16 +30,16 @@ public:
     {
         if (StudentProsmotr->objectName().isEmpty())
             StudentProsmotr->setObjectName("StudentProsmotr");
-        StudentProsmotr->resize(780, 696);
+        StudentProsmotr->resize(800, 600);
         studentWidget = new QTableWidget(StudentProsmotr);
         studentWidget->setObjectName("studentWidget");
-        studentWidget->setGeometry(QRect(140, 130, 256, 192));
+        studentWidget->setGeometry(QRect(50, 50, 300, 400));
         studentListWidget = new QListWidget(StudentProsmotr);
         studentListWidget->setObjectName("studentListWidget");
-        studentListWidget->setGeometry(QRect(250, 450, 256, 192));
+        studentListWidget->setGeometry(QRect(400, 50, 300, 400));
         studentListLabel = new QLabel(StudentProsmotr);
         studentListLabel->setObjectName("studentListLabel");
-        studentListLabel->setGeometry(QRect(490, 100, 45, 15));
+        studentListLabel->setGeometry(QRect(350, 500, 100, 50));
 
         retranslateUi(StudentProsmotr);
 
@@ -48,8 +48,8 @@ public:
 
     void retranslateUi(QFrame *StudentProsmotr)
     {
-        StudentProsmotr->setWindowTitle(QCoreApplication::translate("StudentProsmotr", "Frame", nullptr));
-        studentListLabel->setText(QCoreApplication::translate("StudentProsmotr", "TextLabel", nullptr));
+        StudentProsmotr->setWindowTitle(QCoreApplication::translate("StudentProsmotr", "Updated Frame Title", nullptr));
+        studentListLabel->setText(QCoreApplication::translate("StudentProsmotr", "Updated TextLabel", nullptr));
     } // retranslateUi
 
 };
