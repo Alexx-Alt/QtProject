@@ -23,7 +23,7 @@ class Ui_StudentProsmotr
 {
 public:
     QTableWidget *studentWidget;
-    QListWidget *studentlistWidget;
+    QListWidget *studentListWidget;
     QLabel *studentListLabel;
 
     void setupUi(QFrame *StudentProsmotr)
@@ -34,9 +34,9 @@ public:
         studentWidget = new QTableWidget(StudentProsmotr);
         studentWidget->setObjectName("studentWidget");
         studentWidget->setGeometry(QRect(140, 130, 256, 192));
-        studentlistWidget = new QListWidget(StudentProsmotr);
-        studentlistWidget->setObjectName("studentlistWidget");
-        studentlistWidget->setGeometry(QRect(250, 450, 256, 192));
+        studentListWidget = new QListWidget(StudentProsmotr);
+        studentListWidget->setObjectName("studentListWidget");
+        studentListWidget->setGeometry(QRect(250, 450, 256, 192));
         studentListLabel = new QLabel(StudentProsmotr);
         studentListLabel->setObjectName("studentListLabel");
         studentListLabel->setGeometry(QRect(490, 100, 45, 15));

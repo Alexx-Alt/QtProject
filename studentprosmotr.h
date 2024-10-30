@@ -21,6 +21,8 @@ private:
     void displayStudentsForTeacher();
 
     QString getUserSecretKey(const QString &token);
+
+    QByteArray  base64UrlDecode(const QString &base64Url);
 };
 
 #endif // STUDENTPROSMOTR_H

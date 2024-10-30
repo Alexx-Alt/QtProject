@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QListWidget" name="studentlistWidget">
+  <widget class="QListWidget" name="studentListWidget">
    <property name="geometry">
     <rect>
      <x>250</x>

@@ -6,9 +6,10 @@
 #include <QSqlError>
 #include <QSettings>
 #include <QDateTime>
-#include <QUuid>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
+#include <QDebug>
 
 StudentProsmotr::StudentProsmotr(QWidget *parent)
     : QFrame(parent)
@@ -22,91 +23,97 @@ StudentProsmotr::~StudentProsmotr()
 {
     delete ui;
 }
-void StudentProsmotr::displayStudentsForTeacher() {
-    // Получаем токен из настроек
-    QSettings settings("MyApp", "MyAppName");
-    QString token = settings.value("userToken").toString();
 
-    if (token.isEmpty()) {
-        qDebug() << "Токен отсутствует. Пользователь не авторизован.";
-        return;
+// Функция для декодирования base64Url в QByteArray
+QByteArray StudentProsmotr::base64UrlDecode(const QString &base64Url) {
+    QString base64 = base64Url;
+    base64.replace('-', '+').replace('_', '/');
+    while (base64.length() % 4 != 0) {
+        base64.append('=');
     }
+    return QByteArray::fromBase64(base64.toUtf8());
+}
 
-    // Получаем секретный ключ из защищенного источника
-    QString secretKey = getUserSecretKey(token);
+void StudentProsmotr::displayStudentsForTeacher() {
+    QSettings settings("MyApp", "MyAppName");
+    QString storedToken = settings.value("userToken").toString();
+    qDebug() << "Stored Token:" << storedToken;
 
-    QJsonObject payload;
-    if (JWT::decode(token, payload, secretKey)) {
-        QString username = payload["username"].toString();
-        qint64 expirationTime = payload["exp"].toVariant().toLongLong();
+    QString username;
 
-        // Проверка срока действия токена
-        if (QDateTime::currentSecsSinceEpoch() > expirationTime) {
-            qDebug() << "Срок действия токена истек";
-            return;
+    if (!storedToken.isEmpty()) {
+        try {
+            // Разделяем токен на части
+            QStringList tokenParts = storedToken.split('.');
+            if (tokenParts.size() != 3) {
+                throw std::runtime_error("Неверный формат токена");
+            }
+
+            // Декодируем полезную нагрузку (payload)
+            QByteArray payloadJson = base64UrlDecode(tokenParts[1]);
+            QJsonDocument payloadDoc = QJsonDocument::fromJson(payloadJson);
+
+            if (payloadDoc.isNull()) {
+                throw std::runtime_error("Ошибка декодирования токена");
+            }
+
+            QJsonObject payload = payloadDoc.object();
+            username = payload["username"].toString();
+            qDebug() << "Decoded Username:" << username;
+
+            if (username.isEmpty()) {
+                throw std::runtime_error("Токен не содержит имя пользователя");
+            }
+
+            QString secretKey = getUserSecretKey(username);
+
+            // Проверка подписи токена
+            if (!JWT::verify(storedToken, secretKey)) {
+                throw std::runtime_error("Подпись токена недействительна");
+            }
+
+            qint64 exp = payload["exp"].toVariant().toLongLong();
+            QDateTime expirationDate = QDateTime::fromSecsSinceEpoch(exp);
+
+            if (expirationDate <= QDateTime::currentDateTime()) {
+                throw std::runtime_error("Токен истек");
+            }
+        } catch (const std::exception &e) {
+            qDebug() << "Ошибка при проверке токена:" << e.what();
+            return; // Завершаем функцию, если токен недействителен
         }
-
-        // Получаем teacher_id по имени пользователя
+        // Запрашиваем ID учителя по его username
         QSqlQuery query;
-        query.prepare("SELECT id FROM users WHERE username = ?");
-        query.addBindValue(username);
+        query.prepare("SELECT id FROM users WHERE username = :username");
+        query.bindValue(":username", username);
 
         if (!query.exec() || !query.next()) {
-            qDebug() << "Ошибка получения teacher_id преподавателя:" << query.lastError().text();
+            QMessageBox::critical(this, "Ошибка", "Не удалось получить ID учителя: " + query.lastError().text());
             return;
         }
 
         int teacherId = query.value(0).toInt();
 
-        // Запрашиваем список студентов для teacher_id
-        QSqlQuery studentQuery;
-        studentQuery.prepare("SELECT us.username "
-                             "FROM student_teacher st "
-                             "JOIN users us ON st.student_id = us.id "
-                             "WHERE st.teacher_id = ?");
-        studentQuery.addBindValue(teacherId);
+        // Выполняем запрос для получения списка студентов
+        query.prepare("SELECT us.username FROM student_teacher st "
+                      "JOIN users us ON st.student_id = us.id "
+                      "WHERE st.teacher_id = :teacher_id");
+        query.bindValue(":teacher_id", teacherId);
 
-        if (studentQuery.exec()) {
-            QString studentList;
-            while (studentQuery.next()) {
-                studentList += studentQuery.value("username").toString() + "\n";
-            }
-
-            if (!studentList.isEmpty()) {
-                ui->studentListLabel->setText("Студенты:\n" + studentList);
-            } else {
-                ui->studentListLabel->setText("У данного преподавателя нет студентов.");
-            }
-        } else {
-            qDebug() << "Ошибка получения списка студентов:" << studentQuery.lastError().text();
+        if (!query.exec()) {
+            QMessageBox::critical(this, "Ошибка", "Не удалось выполнить запрос: " + query.lastError().text());
+            return;
         }
-    } else {
-        qDebug() << "Ошибка декодирования токена";
+
+        // Заполняем список студентов в интерфейсе
+        while (query.next()) {
+            QString studentName = query.value(0).toString();
+            ui->studentListWidget->addItem(studentName); // предполагается, что studentListWidget - это QListWidget
+        }
     }
 }
-// Вспомогательная функция для получения секретного ключа
-QString StudentProsmotr::getUserSecretKey(const QString &token) {
-    QStringList parts = token.split('.');
-    if (parts.size() != 3) {
-        qDebug() << "Неверный формат токена";
-        return QString();
-    }
-
-    QByteArray payloadJson = QByteArray::fromBase64(parts[1].toUtf8());
-    QJsonDocument payloadDoc = QJsonDocument::fromJson(payloadJson);
-    if (payloadDoc.isNull()) {
-        qDebug() << "Ошибка декодирования payload токена";
-        return QString();
-    }
-
-    QJsonObject payload = payloadDoc.object();
-    QString username = payload["username"].toString();
-
-    if (username.isEmpty()) {
-        qDebug() << "Токен не содержит имя пользователя";
-        return QString();
-    }
-
+// Вспомогательная функция для получения секретного ключа пользователя
+QString StudentProsmotr::getUserSecretKey(const QString &username) {
     QSqlQuery query;
     query.prepare("SELECT secret_key FROM users WHERE username = ?");
     query.addBindValue(username);
@@ -118,4 +125,3 @@ QString StudentProsmotr::getUserSecretKey(const QString &token) {
         return QString();
     }
 }
-
