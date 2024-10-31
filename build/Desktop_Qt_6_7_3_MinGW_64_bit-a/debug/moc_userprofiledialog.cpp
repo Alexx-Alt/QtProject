@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../userprofiledialog.h"
+#include "../../../../../../QT/QtProject-main/userprofiledialog.h"
 #include <QtNetwork/QSslError>
 #include <QtCore/qmetatype.h>
 

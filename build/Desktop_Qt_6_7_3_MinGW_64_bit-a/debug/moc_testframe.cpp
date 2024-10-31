@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../testframe.h"
+#include "../../../../../../QT/QtProject-main/testframe.h"
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>

@@ -19,6 +19,7 @@ public:
 private slots:
     void on_studentbutton_clicked();
 
+
 private:
     Ui::TeacherMainWindow *ui;
     StudentProsmotr *studentprosmotr;

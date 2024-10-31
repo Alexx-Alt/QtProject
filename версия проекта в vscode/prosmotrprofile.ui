@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ProsmotrProfile</class>
+ <widget class="QFrame" name="ProsmotrProfile">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>602</width>
+    <height>556</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="avatarLabel">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="usernameLabel">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Имя пользователя</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="completedCoursesLabel">
+     <property name="text">
+      <string>Курсы: 0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="emailLabel">
+     <property name="text">
+      <string>email</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="completedLessonsLabel">
+     <property name="text">
+      <string>Уроки: 0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="completedTestsLabel">
+     <property name="text">
+      <string>Тесты: 0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="tegsLabel">
+     <property name="text">
+      <string>Теги: </string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

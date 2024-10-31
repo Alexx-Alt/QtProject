@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../mainwindow.h"
+#include "../../../../../../QT/QtProject-main/mainwindow.h"
 #include <QtGui/qtextcursor.h>
 #include <QtNetwork/QSslError>
 #include <QtCore/qmetatype.h>

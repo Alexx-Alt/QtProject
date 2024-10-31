@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../profile.h"
+#include "../../../../../../QT/QtProject-main/profile.h"
 #include <QtNetwork/QSslError>
 #include <QtCore/qmetatype.h>
 

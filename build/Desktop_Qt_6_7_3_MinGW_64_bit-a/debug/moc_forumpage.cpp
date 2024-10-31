@@ -6,7 +6,7 @@
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../forumpage.h"
+#include "../../../../../../QT/QtProject-main/forumpage.h"
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>

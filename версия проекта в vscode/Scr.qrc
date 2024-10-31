@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>book.png</file>
+        <file>course.png</file>
+        <file>house.png</file>
+        <file>menu.png</file>
+        <file>menuactive.png</file>
+    </qresource>
+</RCC>
